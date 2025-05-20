@@ -82,34 +82,36 @@
     async function askAgent() {
       const input = document.getElementById('userInput').value;
       const fullPrompt = `שאלה על מסמך: ${input}\n\nתוכן המסמך:\n${pdfText}`;
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-         "Authorization": "Bearer or-v1-92850ad0dafb2e0ac61402608230bd7e5b0eba2f83b9b00cd470817ffdcce202"
 
-"
+      try {
+        const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer or-v1-92850ad0dafb2e0ac61402608230bd7e5b0eba2f83b9b00cd470817ffdcce202"
+          },
+          body: JSON.stringify({
+            model: "openai/gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: "אתה סוכן אישי של גיא, תמיד פנה אליו בשם והיה חיובי, דבר בעברית או אנגלית בהתאם לשאלה." },
+              { role: "user", content: fullPrompt }
+            ]
+          })
+        });
 
-        },
-        body: JSON.stringify({
-          model: "mistralai/mixtral-8x7b",
-          messages: [
-            { role: "system", content: "אתה סוכן אישי של גיא, תמיד פנה אליו בשם והיה חיובי, דבר בעברית או אנגלית בהתאם לשאלה." },
-            { role: "user", content: fullPrompt }
-          ]
-        })
-      });
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || "שגיאה בקבלת תשובה.";
+        document.getElementById("response").textContent = reply;
 
-      const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content || "שגיאה בקבלת תשובה.";
-      document.getElementById("response").textContent = reply;
+        const speech = new SpeechSynthesisUtterance(reply);
+        speech.lang = /[\u0590-\u05FF]/.test(reply) ? 'he-IL' : 'en-US';
+        speechSynthesis.speak(speech);
 
-      const speech = new SpeechSynthesisUtterance(reply);
-      speech.lang = /[\u0590-\u05FF]/.test(reply) ? 'he-IL' : 'en-US';
-      speechSynthesis.speak(speech);
+      } catch (err) {
+        document.getElementById("response").textContent = "⚠️ שגיאה: " + err.message;
+      }
     }
 
-    // קול בלחיצה ארוכה
     const recordButton = document.getElementById('recordButton');
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'he-IL';
