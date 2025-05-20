@@ -1,127 +1,115 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>סוכן קולי של גיא</title>
+  <meta charset="UTF-8" />
+  <title>סוכן חכם - גיא</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
       color: #fff;
       text-align: center;
-      padding: 40px;
+      padding: 2em;
     }
     h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
+      font-size: 2em;
+      margin-bottom: 1em;
     }
-    button {
-      padding: 20px 40px;
-      font-size: 1.5em;
-      background: #00c6ff;
-      background: linear-gradient(to right, #0072ff, #00c6ff);
-      color: white;
+    button, input[type="file"] {
+      padding: 1em;
+      margin: 1em;
+      font-size: 1em;
+      border-radius: 12px;
       border: none;
-      border-radius: 60px;
+      background-color: #1abc9c;
+      color: white;
       cursor: pointer;
-      box-shadow: 0 0 20px #00c6ff88;
-      transition: 0.3s ease;
-    }
-    button:active {
-      transform: scale(0.98);
-      background: #0055aa;
     }
     #response {
-      margin-top: 30px;
-      font-size: 1.5em;
-      direction: rtl;
+      margin-top: 2em;
+      padding: 1em;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
-  <h1>🤖 סוכן קולי של גיא</h1>
-  <button id="voiceBtn">🎤 דבר עם גיא</button>
-  <div id="response">החזק את הכפתור ודבר</div>
+  <h1>שלום גיא, אני הסוכן החכם שלך 🤖</h1>
+  <input type="file" id="pdfFile" accept="application/pdf" />
+  <br />
+  <button id="recordButton">לחץ ודבר 🗣️</button>
+  <div id="response"></div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
   <script>
-    const synth = window.speechSynthesis;
+    let fullText = "";
+    let recognizing = false;
+
+    // טוען קובץ PDF ומוציא ממנו טקסט
+    document.getElementById('pdfFile').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const typedArray = new Uint8Array(reader.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let text = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map(item => item.str);
+          text += strings.join(" ") + "\n";
+        }
+        fullText = text.toLowerCase();
+        document.getElementById("response").innerText = "הקובץ נטען בהצלחה ✅";
+        speak("גיא, הקובץ נטען בהצלחה");
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    // זיהוי דיבור
+    const recordButton = document.getElementById("recordButton");
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = "he-IL";
-    recognition.interimResults = false;
-    recognition.continuous = false;
 
-    const voiceBtn = document.getElementById("voiceBtn");
-    const responseDiv = document.getElementById("response");
-
-    function speak(text, lang = 'he-IL') {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang;
-      synth.speak(utterance);
-      responseDiv.innerText = text;
-    }
-
-    function getAnswer(text) {
-      const answers = [
-        { question: ["מה שלומך", "מה נשמע"], answer: "בסדר גמור אחי גיא, תודה ששאלת!", lang: 'he-IL' },
-        { question: ["מה מזג האוויר", "איך מזג האוויר"], answer: "שמשי כמו מצב הרוח שלך, גיא!", lang: 'he-IL' },
-        { question: ["מה אתה יודע לעשות"], answer: "אני יודע להקשיב ולעזור לך גיא, בכל דבר!", lang: 'he-IL' },
-        { question: ["איך קוראים לך"], answer: "קוראים לי הסוכן של גיא!", lang: 'he-IL' },
-        { question: ["tell me a joke"], answer: "Why don't scientists trust atoms? Because they make up everything!", lang: 'en-US' },
-        { question: ["what's your name"], answer: "My name is Guy's voice agent!", lang: 'en-US' },
-        { question: ["how are you"], answer: "I'm doing great Guy, thanks for asking!", lang: 'en-US' },
-        { question: ["what can you do"], answer: "I can talk to you, listen to you, and make your day better, Guy!", lang: 'en-US' }
-      ];
-
-      const lowerText = text.toLowerCase();
-
-      for (const item of answers) {
-        if (item.question.some(q => lowerText.includes(q))) {
-          speak(item.answer, item.lang);
-          return;
-        }
-      }
-
-      const isEnglish = /[a-z]/i.test(text);
-      if (isEnglish) {
-        speak("I'm here for you Guy, ask me anything.", 'en-US');
-      } else {
-        speak("אני פה בשבילך גיא, תשאל מה שבא לך.", 'he-IL');
-      }
-    }
-
-    recognition.onstart = () => {
-      responseDiv.innerText = "🎧 מקשיב לך גיא...";
-    };
+    recognition.onstart = () => recognizing = true;
+    recognition.onend = () => recognizing = false;
+    recognition.onerror = () => speak("גיא, לא הבנתי אותך. נסה שוב.");
 
     recognition.onresult = (event) => {
-      const text = event.results[0][0].transcript;
-      console.log("שמעתי:", text);
-      getAnswer(text);
+      const query = event.results[0][0].transcript.toLowerCase();
+      const answer = findAnswer(query);
+      document.getElementById("response").innerText = "❓ שאלה: " + query + "\n✅ תשובה: " + answer;
+      speak(answer);
     };
 
-    recognition.onerror = (event) => {
-      console.error("שגיאה בזיהוי דיבור:", event.error);
-      speak("סליחה גיא, הייתה שגיאה בזיהוי.", 'he-IL');
-    };
-
-    voiceBtn.addEventListener("mousedown", () => {
-      recognition.start();
+    // לחיצה ארוכה להקלטה
+    recordButton.addEventListener("mousedown", () => {
+      if (!recognizing) recognition.start();
+    });
+    recordButton.addEventListener("mouseup", () => {
+      if (recognizing) recognition.stop();
     });
 
-    voiceBtn.addEventListener("mouseup", () => {
-      recognition.stop();
-    });
+    // חיפוש מילות מפתח בתוכן הקובץ
+    function findAnswer(query) {
+      if (!fullText) return "עדיין לא העלית קובץ PDF, גיא.";
 
-    voiceBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      recognition.start();
-    });
+      const keywords = query.split(" ");
+      for (const keyword of keywords) {
+        if (fullText.includes(keyword)) {
+          const index = fullText.indexOf(keyword);
+          return fullText.substring(index, index + 200) + "...";
+        }
+      }
+      return "לא מצאתי מידע מדויק בקובץ, גיא.";
+    }
 
-    voiceBtn.addEventListener("touchend", (e) => {
-      e.preventDefault();
-      recognition.stop();
-    });
+    // דיבור בקול
+    function speak(text) {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "he-IL";
+      speechSynthesis.speak(utter);
+    }
   </script>
 </body>
 </html>
