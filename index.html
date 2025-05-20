@@ -2,65 +2,98 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <title>סוכן AI - גיא</title>
+  <title>סוכן גיא AI</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      color: #00ffe0;
       text-align: center;
-      background: linear-gradient(to bottom, #f0f8ff, #ffffff);
-      margin: 0;
       padding: 0;
+      margin: 0;
+      direction: rtl;
     }
     header {
-      background-color: #007ACC;
-      color: white;
+      background-color: #111;
       padding: 20px;
-      font-size: 24px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-size: 28px;
+      box-shadow: 0 0 10px #00ffe0;
+    }
+    button, input[type="text"] {
+      margin: 20px;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
     }
     button {
-      margin-top: 40px;
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      background-color: #007ACC;
-      color: white;
-      border-radius: 10px;
+      background-color: #00ffe0;
+      color: #000;
       cursor: pointer;
+      transition: background 0.3s;
     }
     button:hover {
-      background-color: #005F99;
+      background-color: #00cccc;
+    }
+    input[type="text"] {
+      width: 60%;
     }
     #output {
       margin-top: 30px;
       font-size: 20px;
-      color: #333;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <header>🎤 סוכן גיא - דבר איתי</header>
-  <button onclick="startListening()">🎙️ לחץ ודבר</button>
+  <header>🤖 סוכן גיא | Guy the AI Agent</header>
+  <button onclick="startListening()">🎙️ דבר / Speak</button><br>
+  או הקלד / Or type: <input type="text" id="textInput" placeholder="כתוב שאלה..." onkeydown="handleKey(event)">
   <div id="output"></div>
 
   <script>
-    const outputDiv = document.getElementById('output');
+    const apiKey = "PUT-YOUR-OPENAI-API-KEY-HERE"; // שים פה את ה-API שלך
 
-    function speak(text) {
+    async function askGPT(message, lang = 'he') {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: message }],
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      const reply = data.choices?.[0]?.message?.content || "שגיאה בתגובה";
+      speak(reply, lang === 'he' ? 'he-IL' : 'en-US');
+      return reply;
+    }
+
+    function detectLang(text) {
+      const hebrew = /[\u0590-\u05FF]/;
+      return hebrew.test(text) ? 'he' : 'en';
+    }
+
+    function speak(text, lang) {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'he-IL';
+      utterance.lang = lang;
       speechSynthesis.speak(utterance);
     }
 
-    function smartReply(text) {
-      text = text.toLowerCase();
-      if (text.includes("מה שלומך")) return "הכל טוב אח שלי, אני סוכן גיא, מוכן לעזור!";
-      if (text.includes("מזג האוויר")) return "נראה שיש יום יפה בחוץ, תצא תיהנה!";
-      if (text.includes("מה השם שלך")) return "אני גיא, סוכן AI החכם שלך!";
-      if (text.includes("מה השעה")) return "השעה עכשיו היא " + new Date().toLocaleTimeString('he-IL');
-      if (text.includes("תודה")) return "בשמחה אח שלי!";
-      if (text.includes("איך אני נראה")) return "נראה שאתה בן אדם מדהים, גם מבפנים וגם מבחוץ!";
-      return "מעניין... רוצה לשאול אותי משהו אחר?";
+    function handleKey(event) {
+      if (event.key === 'Enter') {
+        const input = document.getElementById("textInput").value.trim();
+        if (input) {
+          respondToUser(input);
+          document.getElementById("textInput").value = "";
+        }
+      }
     }
 
     function startListening() {
@@ -69,18 +102,20 @@
       recognition.start();
 
       recognition.onresult = function(event) {
-        const userSpeech = event.results[0][0].transcript;
-        outputDiv.innerHTML = "אתה אמרת: " + userSpeech;
-        const reply = smartReply(userSpeech);
-        setTimeout(() => {
-          outputDiv.innerHTML += "<br><b>גיא:</b> " + reply;
-          speak(reply);
-        }, 500);
+        const text = event.results[0][0].transcript;
+        respondToUser(text);
       };
 
-      recognition.onerror = function(event) {
-        outputDiv.innerHTML = "שגיאה: לא הבנתי, נסה שוב";
+      recognition.onerror = function() {
+        document.getElementById("output").innerText = "שגיאה בזיהוי קול. נסה שוב.";
       };
+    }
+
+    async function respondToUser(input) {
+      const lang = detectLang(input);
+      document.getElementById("output").innerHTML = `<b>👤:</b> ${input}<br><b>🤖 גיא:</b> מחכה לתשובה...`;
+      const reply = await askGPT(input, lang);
+      document.getElementById("output").innerHTML = `<b>👤:</b> ${input}<br><b>🤖 גיא:</b> ${reply}`;
     }
   </script>
 </body>
