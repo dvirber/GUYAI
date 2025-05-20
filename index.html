@@ -2,113 +2,125 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8" />
-  <title>סוכן חכם - גיא</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>סוכן AI של גיא</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #fff;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      padding: 2em;
+      padding: 40px;
     }
     h1 {
-      font-size: 2em;
-      margin-bottom: 1em;
+      font-size: 2.5em;
+      margin-bottom: 20px;
     }
     button, input[type="file"] {
-      padding: 1em;
-      margin: 1em;
+      padding: 15px 30px;
       font-size: 1em;
-      border-radius: 12px;
+      margin: 10px;
       border: none;
-      background-color: #1abc9c;
+      border-radius: 10px;
+      background-color: #1e88e5;
       color: white;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
-    #response {
-      margin-top: 2em;
-      padding: 1em;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
+    button:hover {
+      background-color: #1565c0;
+    }
+    #transcript, #response {
+      margin-top: 20px;
+      font-size: 1.2em;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>שלום גיא, אני הסוכן החכם שלך 🤖</h1>
-  <input type="file" id="pdfFile" accept="application/pdf" />
+  <h1>סוכן הקול של גיא 🤖</h1>
+  <input type="file" id="pdfInput" accept="application/pdf" />
   <br />
-  <button id="recordButton">לחץ ודבר 🗣️</button>
+  <button id="startRecord">🎤 דבר עכשיו</button>
+  <div id="transcript"></div>
   <div id="response"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
   <script>
-    let fullText = "";
-    let recognizing = false;
+    let fullPdfText = "";
+    let apiKey = "sk-הכנס_כאן_את_המפתח_שלך"; // החלף במפתח שלך
 
-    // טוען קובץ PDF ומוציא ממנו טקסט
-    document.getElementById('pdfFile').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
+    // קריאת PDF
+    document.getElementById('pdfInput').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
       const reader = new FileReader();
-      reader.onload = async () => {
-        const typedArray = new Uint8Array(reader.result);
+      reader.onload = async function() {
+        const typedArray = new Uint8Array(this.result);
         const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-        let text = "";
+        let text = '';
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
-          const strings = content.items.map(item => item.str);
-          text += strings.join(" ") + "\n";
+          text += content.items.map(s => s.str).join(' ') + "\n";
         }
-        fullText = text.toLowerCase();
-        document.getElementById("response").innerText = "הקובץ נטען בהצלחה ✅";
-        speak("גיא, הקובץ נטען בהצלחה");
+        fullPdfText = text;
+        alert("קובץ נטען בהצלחה!");
       };
       reader.readAsArrayBuffer(file);
     });
 
-    // זיהוי דיבור
-    const recordButton = document.getElementById("recordButton");
+    // דיבור => טקסט
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "he-IL";
+    recognition.lang = 'he-IL';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
-    recognition.onstart = () => recognizing = true;
-    recognition.onend = () => recognizing = false;
-    recognition.onerror = () => speak("גיא, לא הבנתי אותך. נסה שוב.");
-
-    recognition.onresult = (event) => {
-      const query = event.results[0][0].transcript.toLowerCase();
-      const answer = findAnswer(query);
-      document.getElementById("response").innerText = "❓ שאלה: " + query + "\n✅ תשובה: " + answer;
-      speak(answer);
+    document.getElementById('startRecord').onclick = () => {
+      recognition.start();
     };
 
-    // לחיצה ארוכה להקלטה
-    recordButton.addEventListener("mousedown", () => {
-      if (!recognizing) recognition.start();
-    });
-    recordButton.addEventListener("mouseup", () => {
-      if (recognizing) recognition.stop();
-    });
+    recognition.onresult = async (event) => {
+      const question = event.results[0][0].transcript;
+      document.getElementById('transcript').innerText = 'שאלת: ' + question;
+      askGpt(question);
+    };
 
-    // חיפוש מילות מפתח בתוכן הקובץ
-    function findAnswer(query) {
-      if (!fullText) return "עדיין לא העלית קובץ PDF, גיא.";
+    recognition.onerror = (e) => {
+      alert('שגיאה בזיהוי קול: ' + e.error);
+    };
 
-      const keywords = query.split(" ");
-      for (const keyword of keywords) {
-        if (fullText.includes(keyword)) {
-          const index = fullText.indexOf(keyword);
-          return fullText.substring(index, index + 200) + "...";
-        }
-      }
-      return "לא מצאתי מידע מדויק בקובץ, גיא.";
+    // שליחה ל־OpenAI
+    async function askGpt(question) {
+      const finalPrompt = `ענה על השאלה לפי המסמך:
+${fullPdfText}
+
+שאלה: ${question}
+ענה בעברית ובסגנון חביב לגיא:`;
+
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4",
+          messages: [{ role: "user", content: finalPrompt }],
+        }),
+      });
+      const data = await res.json();
+      const answer = data.choices?.[0]?.message?.content || 'שגיאה בתגובה';
+      document.getElementById('response').innerText = '🤖 תשובה: ' + answer;
+      speak(answer);
     }
 
-    // דיבור בקול
+    // דיבור חוזר
     function speak(text) {
+      const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "he-IL";
-      speechSynthesis.speak(utter);
+      utter.lang = 'he-IL';
+      synth.speak(utter);
     }
   </script>
 </body>
