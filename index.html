@@ -61,25 +61,43 @@
       responseDiv.innerText = text;
     }
 
+    function getAnswer(text) {
+      const answers = [
+        { question: ["מה שלומך", "מה נשמע"], answer: "בסדר גמור אחי גיא, תודה ששאלת!", lang: 'he-IL' },
+        { question: ["מה מזג האוויר", "איך מזג האוויר"], answer: "שמשי כמו מצב הרוח שלך, גיא!", lang: 'he-IL' },
+        { question: ["מה אתה יודע לעשות"], answer: "אני יודע להקשיב ולעזור לך גיא, בכל דבר!", lang: 'he-IL' },
+        { question: ["איך קוראים לך"], answer: "קוראים לי הסוכן של גיא!", lang: 'he-IL' },
+        { question: ["tell me a joke"], answer: "Why don't scientists trust atoms? Because they make up everything!", lang: 'en-US' },
+        { question: ["what's your name"], answer: "My name is Guy's voice agent!", lang: 'en-US' },
+        { question: ["how are you"], answer: "I'm doing great Guy, thanks for asking!", lang: 'en-US' },
+        { question: ["what can you do"], answer: "I can talk to you, listen to you, and make your day better, Guy!", lang: 'en-US' }
+      ];
+
+      const lowerText = text.toLowerCase();
+
+      for (const item of answers) {
+        if (item.question.some(q => lowerText.includes(q))) {
+          speak(item.answer, item.lang);
+          return;
+        }
+      }
+
+      const isEnglish = /[a-z]/i.test(text);
+      if (isEnglish) {
+        speak("I'm here for you Guy, ask me anything.", 'en-US');
+      } else {
+        speak("אני פה בשבילך גיא, תשאל מה שבא לך.", 'he-IL');
+      }
+    }
+
     recognition.onstart = () => {
       responseDiv.innerText = "🎧 מקשיב לך גיא...";
     };
 
     recognition.onresult = (event) => {
-      const text = event.results[0][0].transcript.toLowerCase();
+      const text = event.results[0][0].transcript;
       console.log("שמעתי:", text);
-
-      if (text.includes("מה שלומך") || text.includes("מה נשמע")) {
-        speak("בסדר גמור אחי גיא, תודה ששאלת!", 'he-IL');
-      } else if (text.includes("what's your name")) {
-        speak("My name is Guy's voice agent!", 'en-US');
-      } else if (text.includes("מה מזג האוויר") || text.includes("מזג אוויר")) {
-        speak("שמשי כמו מצב הרוח שלך, גיא!", 'he-IL');
-      } else if (text.includes("who are you")) {
-        speak("I'm your assistant, Guy! Always here for you.", 'en-US');
-      } else {
-        speak("אני פה בשבילך גיא, תשאל מה שבא לך.", 'he-IL');
-      }
+      getAnswer(text);
     };
 
     recognition.onerror = (event) => {
