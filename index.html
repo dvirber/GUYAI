@@ -2,142 +2,151 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>סוכן AI של גיא</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>סוכן חכם של גיא</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
       color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
       padding: 2rem;
-      min-height: 100vh;
     }
     h1 {
-      font-size: 2.5rem;
-      color: #00d4ff;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 10px #00d4ff;
+      font-size: 3rem;
+      color: #00fff7;
     }
-    button, input {
-      padding: 0.7rem 1rem;
+    input[type="file"], input[type="text"], button {
       margin: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1rem;
       border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: background 0.3s, transform 0.2s;
+      font-size: 1.1rem;
     }
-    button {
-      background: #00d4ff;
-      color: #000;
+    #recordButton {
+      background: linear-gradient(45deg, #00f2fe, #4facfe);
+      color: black;
+      font-weight: bold;
       cursor: pointer;
     }
+    #recordButton.recording {
+      background: red;
+      color: white;
+    }
     button:hover {
-      background: #00b2cc;
-      transform: scale(1.05);
+      opacity: 0.8;
     }
     #response {
       margin-top: 2rem;
-      background: #111;
-      padding: 1.5rem;
-      border-radius: 14px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      font-size: 1.2rem;
       max-width: 700px;
-      text-align: center;
-      box-shadow: 0 0 15px #00d4ff33;
-    }
-    input[type="file"] {
-      background: #fff;
-      color: #000;
+      margin-inline: auto;
     }
   </style>
 </head>
 <body>
-  <h1>שלום גיא, שאל אותי כל דבר!</h1>
-  <input type="file" id="pdfUpload" accept="application/pdf">
+  <h1>ברוך הבא לסוכן הבינה של גיא</h1>
+  <input type="file" id="pdfUpload" accept="application/pdf" />
   <br>
-  <button id="recordButton">🎙️ לחץ והחזק כדי לדבר</button>
+  <button id="recordButton">🎙️ לחץ ודבר</button>
   <br>
-  <input type="text" id="userInput" placeholder="או כתוב כאן...">
-  <button onclick="askAgent()">שאל את הסוכן</button>
+  <input type="text" id="userInput" placeholder="שאל שאלה בעברית או אנגלית" />
+  <button onclick="askAgent()">שאל את גיא</button>
   <div id="response"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js"></script>
   <script>
     let pdfText = "";
+    let isRecording = false;
 
     document.getElementById('pdfUpload').addEventListener('change', async function (e) {
       const file = e.target.files[0];
       if (file) {
-        const fileReader = new FileReader();
-        fileReader.onload = async function () {
+        const reader = new FileReader();
+        reader.onload = async function () {
           const typedarray = new Uint8Array(this.result);
           const pdf = await pdfjsLib.getDocument(typedarray).promise;
-          let text = '';
+          let fullText = '';
           for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const content = await page.getTextContent();
-            text += content.items.map(item => item.str).join(' ') + '\n';
+            fullText += content.items.map(item => item.str).join(' ') + '\n';
           }
-          pdfText = text;
-          alert('המסמך נטען בהצלחה!');
+          pdfText = fullText;
+          alert("📄 הקובץ הועלה בהצלחה!");
         };
-        fileReader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(file);
       }
     });
 
     async function askAgent() {
-      const input = document.getElementById('userInput').value;
-      const fullPrompt = `שאלה על מסמך: ${input}\n\nתוכן המסמך:\n${pdfText}`;
+      const input = document.getElementById('userInput').value.trim();
+      if (!input) return;
+
+      const prompt = pdfText
+        ? `שאלה: ${input}\n\nהמסמך:\n${pdfText}`
+        : input;
 
       try {
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer or-v1-92850ad0dafb2e0ac61402608230bd7e5b0eba2f83b9b00cd470817ffdcce202"
+            "Authorization": "Bearer or-v1-a26d99f66a920a6acdbc66d281bfbc5b09b3151eb05d1771fa89378f728d0f2e"
           },
           body: JSON.stringify({
             model: "openai/gpt-3.5-turbo",
             messages: [
-              { role: "system", content: "אתה סוכן אישי של גיא, תמיד פנה אליו בשם והיה חיובי. ענה בעברית או אנגלית בהתאם לשפה של השאלה." },
-              { role: "user", content: fullPrompt }
+              {
+                role: "system",
+                content: "אתה עוזר אישי חכם בשם גיא. דבר בשפה של המשתמש (עברית או אנגלית), תהיה חברותי, ענה תשובות ברורות, כולל הסברים על מסמכים במידת הצורך."
+              },
+              { role: "user", content: prompt }
             ]
           })
         });
 
         const data = await res.json();
-        const reply = data.choices?.[0]?.message?.content || "שגיאה בקבלת תשובה.";
+        const reply = data.choices?.[0]?.message?.content || "⚠️ לא התקבלה תשובה.";
         document.getElementById("response").textContent = reply;
 
         const speech = new SpeechSynthesisUtterance(reply);
         speech.lang = /[\u0590-\u05FF]/.test(reply) ? 'he-IL' : 'en-US';
         speechSynthesis.speak(speech);
-
-      } catch (err) {
-        document.getElementById("response").textContent = "⚠️ שגיאה: " + err.message;
+      } catch (e) {
+        document.getElementById("response").textContent = "⚠️ שגיאה: " + e.message;
       }
     }
 
-    const recordButton = document.getElementById('recordButton');
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.continuous = false;
     recognition.interimResults = false;
+    recognition.lang = 'he-IL';
 
+    const recordButton = document.getElementById('recordButton');
     recordButton.addEventListener('mousedown', () => {
-      recognition.lang = 'he-IL';
+      isRecording = true;
+      recordButton.classList.add('recording');
       recognition.start();
     });
+    recordButton.addEventListener('mouseup', () => {
+      if (isRecording) {
+        recognition.stop();
+        recordButton.classList.remove('recording');
+        isRecording = false;
+      }
+    });
 
-    recordButton.addEventListener('mouseup', () => recognition.stop());
-
-    recognition.onresult = function (e) {
+    recognition.onresult = (e) => {
       const transcript = e.results[0][0].transcript;
       document.getElementById('userInput').value = transcript;
+      askAgent();
     };
 
-    recognition.onerror = function (e) {
+    recognition.onerror = (e) => {
       document.getElementById("response").textContent = "⚠️ שגיאת קול: " + e.error;
     };
   </script>
