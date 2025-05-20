@@ -102,7 +102,7 @@
             messages: [
               {
                 role: "system",
-                content: "אתה עוזר אישי חכם בשם גיא. דבר בשפה של המשתמש (עברית או אנגלית), תהיה חברותי, ענה תשובות ברורות, כולל הסברים על מסמכים במידת הצורך."
+                content: "אתה עוזר אישי חכם בשם גיא. דבר בשפה של המשתמש (עברית או אנגלית), תהיה חברותי, ענה תשובות ברורות, כולל הסברים על מסמכים במידת הצורך. אם אין לך גישה לבינה מלאכותית, נסה לתת תשובה כללית או הסבר ידידותי."
               },
               { role: "user", content: prompt }
             ]
@@ -127,18 +127,24 @@
     recognition.lang = 'he-IL';
 
     const recordButton = document.getElementById('recordButton');
-    recordButton.addEventListener('mousedown', () => {
+    function startListening() {
       isRecording = true;
       recordButton.classList.add('recording');
       recognition.start();
-    });
-    recordButton.addEventListener('mouseup', () => {
+    }
+
+    function stopListening() {
       if (isRecording) {
         recognition.stop();
         recordButton.classList.remove('recording');
         isRecording = false;
       }
-    });
+    }
+
+    recordButton.addEventListener('mousedown', startListening);
+    recordButton.addEventListener('mouseup', stopListening);
+    recordButton.addEventListener('touchstart', startListening);
+    recordButton.addEventListener('touchend', stopListening);
 
     recognition.onresult = (e) => {
       const transcript = e.results[0][0].transcript;
