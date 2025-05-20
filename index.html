@@ -7,37 +7,45 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 2rem;
+      min-height: 100vh;
     }
     h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: #00d4ff;
       margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00d4ff;
     }
     button, input {
       padding: 0.7rem 1rem;
       margin: 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 1rem;
+      transition: background 0.3s, transform 0.2s;
     }
     button {
       background: #00d4ff;
       color: #000;
       cursor: pointer;
     }
+    button:hover {
+      background: #00b2cc;
+      transform: scale(1.05);
+    }
     #response {
       margin-top: 2rem;
       background: #111;
-      padding: 1rem;
-      border-radius: 10px;
-      max-width: 600px;
+      padding: 1.5rem;
+      border-radius: 14px;
+      max-width: 700px;
       text-align: center;
+      box-shadow: 0 0 15px #00d4ff33;
     }
     input[type="file"] {
       background: #fff;
@@ -49,7 +57,7 @@
   <h1>שלום גיא, שאל אותי כל דבר!</h1>
   <input type="file" id="pdfUpload" accept="application/pdf">
   <br>
-  <button id="recordButton">🎙️ החזק כדי לדבר</button>
+  <button id="recordButton">🎙️ לחץ והחזק כדי לדבר</button>
   <br>
   <input type="text" id="userInput" placeholder="או כתוב כאן...">
   <button onclick="askAgent()">שאל את הסוכן</button>
@@ -93,7 +101,7 @@
           body: JSON.stringify({
             model: "openai/gpt-3.5-turbo",
             messages: [
-              { role: "system", content: "אתה סוכן אישי של גיא, תמיד פנה אליו בשם והיה חיובי, דבר בעברית או אנגלית בהתאם לשאלה." },
+              { role: "system", content: "אתה סוכן אישי של גיא, תמיד פנה אליו בשם והיה חיובי. ענה בעברית או אנגלית בהתאם לשפה של השאלה." },
               { role: "user", content: fullPrompt }
             ]
           })
@@ -114,12 +122,23 @@
 
     const recordButton = document.getElementById('recordButton');
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'he-IL';
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-    recordButton.addEventListener('mousedown', () => recognition.start());
+    recordButton.addEventListener('mousedown', () => {
+      recognition.lang = 'he-IL';
+      recognition.start();
+    });
+
     recordButton.addEventListener('mouseup', () => recognition.stop());
+
     recognition.onresult = function (e) {
-      document.getElementById('userInput').value = e.results[0][0].transcript;
+      const transcript = e.results[0][0].transcript;
+      document.getElementById('userInput').value = transcript;
+    };
+
+    recognition.onerror = function (e) {
+      document.getElementById("response").textContent = "⚠️ שגיאת קול: " + e.error;
     };
   </script>
 </body>
