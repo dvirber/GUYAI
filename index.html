@@ -62,15 +62,16 @@
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
-          text += content.items.map(s => s.str).join(' ') + "\n";
+          const pageText = content.items.map(s => s.str).join(' ');
+          text += `\n--- עמוד ${i} ---\n${pageText}`;
         }
         fullPdfText = text;
-        alert("קובץ נטען בהצלחה!");
+        alert("✅ הקובץ נטען והוכן לשאלות!");
       };
       reader.readAsArrayBuffer(file);
     });
 
-    // דיבור => טקסט
+    // זיהוי קול
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'he-IL';
     recognition.interimResults = false;
@@ -82,7 +83,7 @@
 
     recognition.onresult = async (event) => {
       const question = event.results[0][0].transcript;
-      document.getElementById('transcript').innerText = 'שאלת: ' + question;
+      document.getElementById('transcript').innerText = '🎙️ שאלה: ' + question;
       askGpt(question);
     };
 
@@ -90,13 +91,15 @@
       alert('שגיאה בזיהוי קול: ' + e.error);
     };
 
-    // שליחה ל־OpenAI
+    // שליחה ל־OpenAI עם prompt מותאם להבנת מסמכים
     async function askGpt(question) {
-      const finalPrompt = `ענה על השאלה לפי המסמך:
-${fullPdfText}
+      if (!fullPdfText) {
+        alert("אנא טען קובץ PDF קודם.");
+        return;
+      }
 
-שאלה: ${question}
-ענה בעברית ובסגנון חביב לגיא:`;
+      const systemPrompt = `אתה סוכן חכם שעוזר לבחור בשם גיא להבין מסמך שהוא העלה. התשובות שלך צריכות להתבסס רק על המידע במסמך.`;
+      const finalPrompt = `המסמך הוא:\n${fullPdfText.slice(0, 10000)}\n\nהשאלה של גיא: ${question}`;
 
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
@@ -106,16 +109,20 @@ ${fullPdfText}
         },
         body: JSON.stringify({
           model: "gpt-4",
-          messages: [{ role: "user", content: finalPrompt }],
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: finalPrompt }
+          ]
         }),
       });
+
       const data = await res.json();
       const answer = data.choices?.[0]?.message?.content || 'שגיאה בתגובה';
       document.getElementById('response').innerText = '🤖 תשובה: ' + answer;
       speak(answer);
     }
 
-    // דיבור חוזר
+    // השמעת תשובה בקול
     function speak(text) {
       const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(text);
