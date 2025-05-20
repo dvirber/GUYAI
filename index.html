@@ -2,60 +2,83 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
-  <title>סוכן גיא AI</title>
+  <title>Guy AI Agent</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
-      color: #00ffe0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      color: #ffffff;
       text-align: center;
-      padding: 0;
       margin: 0;
+      padding: 0;
       direction: rtl;
     }
+
     header {
-      background-color: #111;
-      padding: 20px;
+      background-color: #1e1e2f;
+      padding: 30px;
       font-size: 28px;
-      box-shadow: 0 0 10px #00ffe0;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      color: #00ffe0;
     }
-    button, input[type="text"] {
-      margin: 20px;
-      padding: 15px 20px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
+
     button {
       background-color: #00ffe0;
       color: #000;
+      border: none;
+      padding: 14px 28px;
+      margin: 20px;
+      font-size: 18px;
+      border-radius: 30px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
     }
+
     button:hover {
       background-color: #00cccc;
+      transform: scale(1.05);
     }
+
     input[type="text"] {
+      padding: 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
       width: 60%;
+      margin-top: 20px;
+      text-align: right;
     }
+
     #output {
-      margin-top: 30px;
-      font-size: 20px;
+      margin: 30px auto;
+      padding: 20px;
+      max-width: 800px;
+      background-color: #121212;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+      font-size: 18px;
       white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <header>🤖 סוכן גיא | Guy the AI Agent</header>
-  <button onclick="startListening()">🎙️ דבר / Speak</button><br>
-  או הקלד / Or type: <input type="text" id="textInput" placeholder="כתוב שאלה..." onkeydown="handleKey(event)">
+  <header>🤖 סוכן אישי: גיא AI</header>
+
+  <button onclick="startListening()">🎤 דבר עם גיא</button>
+  <br>
+  <input type="text" id="textInput" placeholder="או כתוב שאלה..." onkeydown="handleKey(event)">
+
   <div id="output"></div>
 
   <script>
-    const apiKey = "PUT-YOUR-OPENAI-API-KEY-HERE"; // שים פה את ה-API שלך
+    const apiKey = "PUT-YOUR-OPENAI-API-KEY-HERE"; // הכנס את המפתח האישי שלך
 
     async function askGPT(message, lang = 'he') {
+      const prompt = `ענה כמו סוכן AI אישי רק עבור גיא, דבר באופן קליל, אישי וחכם, תוך שימוש בשם גיא: ${message}`;
+
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -64,26 +87,25 @@
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: message }],
-          temperature: 0.7
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.8
         })
       });
 
       const data = await response.json();
-      const reply = data.choices?.[0]?.message?.content || "שגיאה בתגובה";
+      const reply = data.choices?.[0]?.message?.content || "שגיאה בתגובה מהשרת.";
       speak(reply, lang === 'he' ? 'he-IL' : 'en-US');
       return reply;
     }
 
     function detectLang(text) {
-      const hebrew = /[\u0590-\u05FF]/;
-      return hebrew.test(text) ? 'he' : 'en';
+      return /[\u0590-\u05FF]/.test(text) ? 'he' : 'en';
     }
 
     function speak(text, lang) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang;
-      speechSynthesis.speak(utterance);
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = lang;
+      speechSynthesis.speak(utter);
     }
 
     function handleKey(event) {
@@ -99,6 +121,7 @@
     function startListening() {
       const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
       recognition.lang = 'he-IL';
+      recognition.interimResults = false;
       recognition.start();
 
       recognition.onresult = function(event) {
@@ -106,14 +129,14 @@
         respondToUser(text);
       };
 
-      recognition.onerror = function() {
-        document.getElementById("output").innerText = "שגיאה בזיהוי קול. נסה שוב.";
+      recognition.onerror = function(event) {
+        document.getElementById("output").innerText = `⚠️ שגיאה בקלט הקולי: ${event.error}`;
       };
     }
 
     async function respondToUser(input) {
       const lang = detectLang(input);
-      document.getElementById("output").innerHTML = `<b>👤:</b> ${input}<br><b>🤖 גיא:</b> מחכה לתשובה...`;
+      document.getElementById("output").innerHTML = `<b>👤:</b> ${input}<br><b>🤖 גיא:</b> חושב...`;
       const reply = await askGPT(input, lang);
       document.getElementById("output").innerHTML = `<b>👤:</b> ${input}<br><b>🤖 גיא:</b> ${reply}`;
     }
