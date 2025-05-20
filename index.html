@@ -3,131 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>סוכן AI של גיא</title>
+  <title>סוכן קולי לגיא - PDF חכם</title>
   <style>
     body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #2c3e50, #4ca1af);
       color: white;
-      font-family: 'Segoe UI', sans-serif;
       text-align: center;
       padding: 40px;
     }
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-    }
-    button, input[type="file"] {
-      padding: 15px 30px;
-      font-size: 1em;
-      margin: 10px;
-      border: none;
-      border-radius: 10px;
-      background-color: #1e88e5;
+    button {
+      background: #1abc9c;
       color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #1565c0;
-    }
-    #transcript, #response {
       margin-top: 20px;
-      font-size: 1.2em;
-      white-space: pre-wrap;
+    }
+    input[type=file] {
+      margin-top: 20px;
+    }
+    #response {
+      margin-top: 30px;
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>סוכן הקול של גיא 🤖</h1>
+  <h1>שלום גיא 👋</h1>
+  <p>העלה מסמך PDF בעברית או אנגלית, תשאל שאלה והסוכן החכם שלך יענה בקול.</p>
+
   <input type="file" id="pdfInput" accept="application/pdf" />
-  <br />
-  <button id="startRecord">🎤 דבר עכשיו</button>
-  <div id="transcript"></div>
+  <br/>
+  <input type="text" id="question" placeholder="מה אתה רוצה לשאול?" style="width: 80%; padding: 10px; margin-top: 20px;" />
+  <br/>
+  <button onclick="processQuestion()">שאל את גיא בוט</button>
   <div id="response"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
   <script>
-    let fullPdfText = "";
-    let apiKey = "sk-הכנס_כאן_את_המפתח_שלך"; // החלף במפתח שלך
+    let extractedText = "";
 
-    // קריאת PDF
-    document.getElementById('pdfInput').addEventListener('change', async (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async function() {
-        const typedArray = new Uint8Array(this.result);
-        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-        let text = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          const pageText = content.items.map(s => s.str).join(' ');
-          text += `\n--- עמוד ${i} ---\n${pageText}`;
-        }
-        fullPdfText = text;
-        alert("✅ הקובץ נטען והוכן לשאלות!");
-      };
-      reader.readAsArrayBuffer(file);
-    });
-
-    // זיהוי קול
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'he-IL';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    document.getElementById('startRecord').onclick = () => {
-      recognition.start();
-    };
-
-    recognition.onresult = async (event) => {
-      const question = event.results[0][0].transcript;
-      document.getElementById('transcript').innerText = '🎙️ שאלה: ' + question;
-      askGpt(question);
-    };
-
-    recognition.onerror = (e) => {
-      alert('שגיאה בזיהוי קול: ' + e.error);
-    };
-
-    // שליחה ל־OpenAI עם prompt מותאם להבנת מסמכים
-    async function askGpt(question) {
-      if (!fullPdfText) {
-        alert("אנא טען קובץ PDF קודם.");
+    document.getElementById('pdfInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file.type !== "application/pdf") {
+        alert("אנא העלה קובץ PDF בלבד");
         return;
       }
 
-      const systemPrompt = `אתה סוכן חכם שעוזר לבחור בשם גיא להבין מסמך שהוא העלה. התשובות שלך צריכות להתבסס רק על המידע במסמך.`;
-      const finalPrompt = `המסמך הוא:\n${fullPdfText.slice(0, 10000)}\n\nהשאלה של גיא: ${question}`;
+      const fileReader = new FileReader();
+      fileReader.onload = async function () {
+        const typedArray = new Uint8Array(this.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let textContent = '';
 
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: finalPrompt }
-          ]
-        }),
-      });
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const text = await page.getTextContent();
+          const pageText = text.items.map(item => item.str).join(' ');
+          textContent += pageText + '\n';
+        }
 
-      const data = await res.json();
-      const answer = data.choices?.[0]?.message?.content || 'שגיאה בתגובה';
-      document.getElementById('response').innerText = '🤖 תשובה: ' + answer;
-      speak(answer);
-    }
+        extractedText = textContent;
+        alert("PDF נטען בהצלחה!");
+      };
+      fileReader.readAsArrayBuffer(file);
+    });
 
-    // השמעת תשובה בקול
-    function speak(text) {
-      const synth = window.speechSynthesis;
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'he-IL';
-      synth.speak(utter);
+    async function processQuestion() {
+      const question = document.getElementById('question').value;
+      if (!extractedText || !question) {
+        alert("אנא העלה קובץ PDF וכתוב שאלה");
+        return;
+      }
+
+      const prompt = `אתה עוזר אישי בשם גיאבוט. קיבלת את התוכן הבא מתוך מסמך PDF:\n${extractedText.slice(0, 8000)}\n\nבהתבסס על המידע הזה בלבד, ענה בקצרה על השאלה: ${question}`;
+
+      const responseDiv = document.getElementById("response");
+      responseDiv.textContent = "חושב...";
+
+      try {
+        const gptResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer sk-הכנס_כאן_את_המפתח_שלך"
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: "אתה עוזר אישי בשם גיאבוט, שמסביר מסמכים בצורה פשוטה בעברית או אנגלית." },
+              { role: "user", content: prompt }
+            ]
+          })
+        });
+
+        const data = await gptResponse.json();
+        const answer = data.choices[0].message.content;
+        responseDiv.textContent = answer;
+
+        // השמעה קולית בעברית או אנגלית לפי השפה בזיהוי פשוט
+        const utterance = new SpeechSynthesisUtterance(answer);
+        utterance.lang = /[\u0590-\u05FF]/.test(answer) ? "he-IL" : "en-US";
+        speechSynthesis.speak(utterance);
+      } catch (err) {
+        responseDiv.textContent = "שגיאה בקבלת תשובה. ודא שה-API תקין.";
+        console.error(err);
+      }
     }
   </script>
 </body>
