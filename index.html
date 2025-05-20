@@ -1,88 +1,109 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>סוכן AI של גיא</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>סוכן קולי של גיא</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
       color: #fff;
       text-align: center;
       padding: 40px;
     }
-
     h1 {
       font-size: 2.5em;
       margin-bottom: 20px;
     }
-
     button {
-      padding: 15px 30px;
-      font-size: 1.2em;
+      padding: 20px 40px;
+      font-size: 1.5em;
       background: #00c6ff;
       background: linear-gradient(to right, #0072ff, #00c6ff);
       color: white;
       border: none;
-      border-radius: 50px;
+      border-radius: 60px;
       cursor: pointer;
-      box-shadow: 0 0 15px #00c6ff88;
-      transition: all 0.3s ease;
+      box-shadow: 0 0 20px #00c6ff88;
+      transition: 0.3s ease;
     }
-
-    button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px #00c6ffcc;
+    button:active {
+      transform: scale(0.98);
+      background: #0055aa;
     }
-
     #response {
       margin-top: 30px;
       font-size: 1.5em;
+      direction: rtl;
     }
   </style>
 </head>
 <body>
-  <h1>🤖 סוכן AI אישי של גיא</h1>
-  <button onclick="startListening()">🎤 דבר איתי</button>
-  <div id="response">לחץ על הכפתור ודבר</div>
+  <h1>🤖 סוכן קולי של גיא</h1>
+  <button id="voiceBtn">🎤 דבר עם גיא</button>
+  <div id="response">החזק את הכפתור ודבר</div>
 
   <script>
     const synth = window.speechSynthesis;
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = "he-IL";
+    recognition.interimResults = false;
+    recognition.continuous = false;
 
-    function speak(text) {
+    const voiceBtn = document.getElementById("voiceBtn");
+    const responseDiv = document.getElementById("response");
+
+    function speak(text, lang = 'he-IL') {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "he-IL";
+      utterance.lang = lang;
       synth.speak(utterance);
-      document.getElementById("response").innerText = text;
+      responseDiv.innerText = text;
     }
 
-    function startListening() {
-      recognition.start();
-      document.getElementById("response").innerText = "מקשיב לך גיא...";
-    }
+    recognition.onstart = () => {
+      responseDiv.innerText = "🎧 מקשיב לך גיא...";
+    };
 
-    recognition.onresult = function(event) {
-      const text = event.results[0][0].transcript;
+    recognition.onresult = (event) => {
+      const text = event.results[0][0].transcript.toLowerCase();
       console.log("שמעתי:", text);
 
-      if (text.includes("מה שלומך")) {
-        speak("בסדר גמור אח שלי גיא!");
-      } else if (text.includes("מה מזג האוויר")) {
-        speak("שמשי כמו מצב הרוח שלך גיא.");
-      } else if (text.includes("מי אתה")) {
-        speak("אני הסוכן הקולי האישי של גיא המלך.");
+      if (text.includes("מה שלומך") || text.includes("מה נשמע")) {
+        speak("בסדר גמור אחי גיא, תודה ששאלת!", 'he-IL');
+      } else if (text.includes("what's your name")) {
+        speak("My name is Guy's voice agent!", 'en-US');
+      } else if (text.includes("מה מזג האוויר") || text.includes("מזג אוויר")) {
+        speak("שמשי כמו מצב הרוח שלך, גיא!", 'he-IL');
+      } else if (text.includes("who are you")) {
+        speak("I'm your assistant, Guy! Always here for you.", 'en-US');
       } else {
-        speak("אני פה בשבילך גיא, תשאל מה שבא לך.");
+        speak("אני פה בשבילך גיא, תשאל מה שבא לך.", 'he-IL');
       }
     };
 
-    recognition.onerror = function(event) {
-      console.error("שגיאת זיהוי דיבור:", event.error);
-      speak("סליחה גיא, לא שמעתי טוב.");
+    recognition.onerror = (event) => {
+      console.error("שגיאה בזיהוי דיבור:", event.error);
+      speak("סליחה גיא, הייתה שגיאה בזיהוי.", 'he-IL');
     };
+
+    voiceBtn.addEventListener("mousedown", () => {
+      recognition.start();
+    });
+
+    voiceBtn.addEventListener("mouseup", () => {
+      recognition.stop();
+    });
+
+    voiceBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      recognition.start();
+    });
+
+    voiceBtn.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      recognition.stop();
+    });
   </script>
 </body>
 </html>
