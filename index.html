@@ -3,52 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>הסוכן החכם של גיא</title>
+  <title>העוזר החכם של גיא</title>
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js"></script>
   <style>
     body {
-      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
-      font-family: 'Segoe UI', sans-serif;
-      color: #fff;
+      font-family: 'Varela Round', sans-serif;
+      background: linear-gradient(to bottom, #2b0000, #4a0000, #000000);
+      color: white;
       text-align: center;
       padding: 2rem;
+      direction: rtl;
     }
     h1 {
       font-size: 3rem;
-      color: #00fff7;
+      color: #ff4d4d;
+      margin-bottom: 0.5rem;
+    }
+    .icon {
+      font-size: 2.5rem;
+      vertical-align: middle;
+      margin-left: 0.5rem;
     }
     input[type="file"], input[type="text"], button {
-      margin: 1rem;
+      margin: 0.7rem;
       padding: 0.8rem 1.2rem;
       border-radius: 1rem;
       border: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
+    }
+    input[type="text"] {
+      width: 60%;
     }
     #recordButton {
-      background: linear-gradient(45deg, #00f2fe, #4facfe);
-      color: black;
+      background: linear-gradient(45deg, #ff0000, #ff4d4d);
+      color: white;
       font-weight: bold;
       cursor: pointer;
     }
     #recordButton.recording {
-      background: red;
-      color: white;
+      animation: pulse 1s infinite;
+      background: darkred;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
     button:hover {
-      opacity: 0.8;
+      opacity: 0.85;
     }
     #response {
       margin-top: 2rem;
       padding: 1rem;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 1rem;
       font-size: 1.2rem;
-      max-width: 700px;
+      max-width: 800px;
       margin-inline: auto;
+    }
+    audio {
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <h1>ברוך הבא לסוכן הבינה של גיא</h1>
+  <h1><span class="icon">🧠</span>העוזר החכם של גיא</h1>
 
   <input type="file" id="pdfUpload" accept="application/pdf" />
   <br>
@@ -56,14 +76,19 @@
   <br>
   <input type="text" id="userInput" placeholder="שאל שאלה בעברית או אנגלית" />
   <button onclick="askAgent()">שאל את גיא</button>
-  <div id="response"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js"></script>
+  <div id="response">💬 ההודעות יוצגו כאן</div>
+
+  <!-- 🎵 מוזיקה -->
+  <audio autoplay loop controls>
+    <source src="https://www.bensound.com/bensound-music/bensound-dubstep.mp3" type="audio/mpeg">
+    הדפדפן שלך לא תומך בניגון אודיו.
+  </audio>
+
   <script>
     let pdfText = "";
     let isRecording = false;
 
-    // קריאת קובץ PDF
     document.getElementById('pdfUpload').addEventListener('change', async function (e) {
       const file = e.target.files[0];
       if (file) {
@@ -78,17 +103,20 @@
             fullText += content.items.map(item => item.str).join(' ') + '\n';
           }
           pdfText = fullText;
-          alert("📄 הקובץ הועלה בהצלחה!");
+          alert("📄 הקובץ נטען בהצלחה!");
         };
         reader.readAsArrayBuffer(file);
       }
     });
 
-    // שליחת השאלה ל-OpenAI
     async function askAgent() {
-      const input = document.getElementById("userInput").value;
-      const fullPrompt = `אני סוכן AI מומחה לעסקים, משפטים, פיננסים וחוק בארה"ב. נתח את השאלה הבאה בהתאם לתוכן הבא מהקובץ:\n${pdfText}\n\nשאלה:\n${input}`;
+      const input = document.getElementById("userInput").value.trim();
+      if (!input) {
+        alert("הזן שאלה כדי לשלוח.");
+        return;
+      }
 
+      const fullPrompt = `אני סוכן AI מומחה לעסקים, משפטים, פיננסים וחוק בארה\"ב. נתח את השאלה הבאה בהתאם לתוכן הבא מהקובץ:\n${pdfText}\n\nשאלה:\n${input}`;
       document.getElementById("response").textContent = "⏳ טוען תשובה...";
 
       try {
@@ -96,7 +124,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer or-v1-a26d99f66a920a6acdbc66d281bfbc5b09b3151eb05d1771fa89378f728d0f2e" // ← כאן שמור על המפתח שלך
+            "Authorization": "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
@@ -106,31 +134,23 @@
         });
 
         const data = await response.json();
+        const answer = data.choices?.[0]?.message?.content || "⚠️ לא התקבלה תשובה תקינה.";
+        document.getElementById("response").textContent = answer;
 
-        if (data?.choices?.[0]?.message?.content) {
-          const answer = data.choices[0].message.content;
-          document.getElementById("response").textContent = answer;
-
-          const speech = new SpeechSynthesisUtterance(answer);
-          speech.lang = /[\u0590-\u05FF]/.test(answer) ? 'he-IL' : 'en-US';
-          speechSynthesis.speak(speech);
-        } else {
-          document.getElementById("response").textContent = "⚠️ לא התקבלה תשובה תקינה מהשרת.";
-          console.error("API Response:", data);
-        }
+        const speech = new SpeechSynthesisUtterance(answer);
+        speech.lang = /[\u0590-\u05FF]/.test(answer) ? 'he-IL' : 'en-US';
+        speechSynthesis.speak(speech);
       } catch (error) {
         document.getElementById("response").textContent = "⚠️ שגיאה: " + error.message;
       }
     }
 
-    // הגדרת זיהוי קול
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = 'he-IL';
 
     const recordButton = document.getElementById('recordButton');
-
     function startListening() {
       isRecording = true;
       recordButton.classList.add('recording');
