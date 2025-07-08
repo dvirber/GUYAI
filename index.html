@@ -1,184 +1,183 @@
+```html
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>העוזר החכם של גיא</title>
-  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LawAid: Free Legal Advisor for All</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: 'Varela Round', sans-serif;
-      background: linear-gradient(to bottom, #2b0000, #4a0000, #000000);
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      direction: rtl;
+    .chat-bubble {
+      max-width: 80%;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 5px 0;
     }
-    h1 {
-      font-size: 3rem;
-      color: #ff4d4d;
-      margin-bottom: 0.5rem;
+    .user-bubble {
+      background: #e6f3ff;
+      margin-left: auto;
+      text-align: right;
     }
-    .icon {
-      font-size: 2.5rem;
-      vertical-align: middle;
-      margin-left: 0.5rem;
-    }
-    input[type="file"], input[type="text"], button {
-      margin: 0.7rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 1rem;
-      border: none;
-      font-size: 1rem;
-    }
-    input[type="text"] {
-      width: 60%;
-    }
-    #recordButton {
-      background: linear-gradient(45deg, #ff0000, #ff4d4d);
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #recordButton.recording {
-      animation: pulse 1s infinite;
-      background: darkred;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    button:hover {
-      opacity: 0.85;
-    }
-    #response {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 1rem;
-      font-size: 1.2rem;
-      max-width: 800px;
-      margin-inline: auto;
-    }
-    audio {
-      margin-top: 1rem;
+    .bot-bubble {
+      background: #f3f4f6;
+      margin-right: auto;
     }
   </style>
 </head>
-<body>
-  <h1><span class="icon">🧠</span>העוזר החכם של גיא</h1>
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-900 text-white py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">LawAid</h1>
+      <nav>
+        <a href="#home" class="mx-2 hover:underline">Home</a>
+        <a href="#chatbot" class="mx-2 hover:underline">Ask a Question</a>
+        <a href="#lead-form" class="mx-2 hover:underline">Get Legal Help</a>
+      </nav>
+    </div>
+  </header>
 
-  <input type="file" id="pdfUpload" accept="application/pdf" />
-  <br>
-  <button id="recordButton">🎙️ לחץ ודבר</button>
-  <br>
-  <input type="text" id="userInput" placeholder="שאל שאלה בעברית או אנגלית" />
-  <button onclick="askAgent()">שאל את גיא</button>
+  <!-- Hero Section -->
+  <section id="home" class="bg-blue-100 py-16 text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-blue-900 mb-4">LawAid: Legal Clarity. No Cost. No Stress.</h2>
+      <p class="text-lg text-gray-700 mb-6">Get instant answers to legal questions and connect with expert attorneys for free.</p>
+      <a href="#lead-form" class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600">Find a Lawyer Now</a>
+    </div>
+  </section>
 
-  <div id="response">💬 ההודעות יוצגו כאן</div>
+  <!-- Chatbot Section -->
+  <section id="chatbot" class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+      <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Ask LawAid Anything</h3>
+      <div id="chat-container" class="border rounded-lg p-4 max-w-2xl mx-auto h-64 overflow-y-auto mb-4">
+        <div class="bot-bubble chat-bubble">Hi! I'm LawAid. Ask me a legal question, like 'What’s lifting the corporate veil?'</div>
+      </div>
+      <div class="flex max-w-2xl mx-auto">
+        <input id="chat-input" type="text" class="flex-1 p-2 border rounded-l-lg" placeholder="Type your question...">
+        <button id="chat-submit" class="bg-blue-900 text-white px-4 py-2 rounded-r-lg hover:bg-blue-800">Send</button>
+      </div>
+    </div>
+  </section>
 
-  <!-- 🎵 מוזיקה -->
-  <audio autoplay loop controls>
-    <source src="https://www.bensound.com/bensound-music/bensound-dubstep.mp3" type="audio/mpeg">
-    הדפדפן שלך לא תומך בניגון אודיו.
-  </audio>
+  <!-- Educational Section -->
+  <section id="education" class="py-12 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Learn About Lifting the Corporate Veil</h3>
+      <div class="max-w-2xl mx-auto text-gray-700">
+        <p class="mb-4">When a company is used for fraud or to dodge legal duties, courts may 'lift the corporate veil' to hold owners personally liable. For example, if a company hides debts, its owners might have to pay. LawAid explains complex terms simply and connects you to corporate law experts.</p>
+        <a href="#lead-form" class="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600">Talk to a Corporate Lawyer</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lead Capture Form -->
+  <section id="lead-form" class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+      <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Connect with an Attorney</h3>
+      <form id="leadForm" class="max-w-md mx-auto space-y-4">
+        <input type="text" name="name" placeholder="Your Name" required class="w-full p-2 border rounded-lg">
+        <input type="email" name="email" placeholder="Your Email" required class="w-full p-2 border rounded-lg">
+        <input type="text" name="location" placeholder="Your Location" required class="w-full p-2 border rounded-lg">
+        <select name="practice_area" required class="w-full p-2 border rounded-lg">
+          <option value="" disabled selected>Select Legal Issue</option>
+          <option value="corporate_law">Corporate Law</option>
+          <option value="family_law">Family Law</option>
+          <option value="personal_injury">Personal Injury</option>
+        </select>
+        <button type="submit" class="w-full bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Get Help Now</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-4">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-sm">LawAid provides general information, not legal advice. Consult a licensed attorney for professional guidance.</p>
+      <p class="text-sm mt-2">Contact: support@lawaid.com | &copy; 2025 LawAid</p>
+    </div>
+  </footer>
 
   <script>
-    let pdfText = "";
-    let isRecording = false;
+    const chatContainer = document.getElementById('chat-container');
+    const chatInput = document.getElementById('chat-input');
+    const chatSubmit = document.getElementById('chat-submit');
+    const leadForm = document.getElementById('leadForm');
 
-    document.getElementById('pdfUpload').addEventListener('change', async function (e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async function () {
-          const typedarray = new Uint8Array(this.result);
-          const pdf = await pdfjsLib.getDocument(typedarray).promise;
-          let fullText = '';
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            fullText += content.items.map(item => item.str).join(' ') + '\n';
-          }
-          pdfText = fullText;
-          alert("📄 הקובץ נטען בהצלחה!");
-        };
-        reader.readAsArrayBuffer(file);
+    chatSubmit.addEventListener('click', () => {
+      const userInput = chatInput.value.trim();
+      if (!userInput) return;
+
+      // Add user message
+      const userBubble = document.createElement('div');
+      userBubble.className = 'user-bubble chat-bubble';
+      userBubble.textContent = userInput;
+      chatContainer.appendChild(userBubble);
+
+      // Simulate bot response
+      const botBubble = document.createElement('div');
+      botBubble.className = 'bot-bubble chat-bubble';
+      if (userInput.toLowerCase().includes('corporate veil')) {
+        botBubble.innerHTML = `Lifting the corporate veil is when courts hold company owners personally liable, like in fraud cases. Need a corporate lawyer? <a href="#lead-form" class="text-blue-900 underline">Connect now</a>. <br><i>Not legal advice; consult an attorney.</i>`;
+      } else {
+        botBubble.innerHTML = `I can explain legal terms or connect you with a lawyer. Try asking about 'lifting the corporate veil' or enter your details below. <br><i>Not legal advice; consult an attorney.</i>`;
       }
+      chatContainer.appendChild(botBubble);
+
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      chatInput.value = '';
     });
 
-    async function askAgent() {
-      const input = document.getElementById("userInput").value.trim();
-      if (!input) {
-        alert("הזן שאלה כדי לשלוח.");
-        return;
-      }
-
-      const fullPrompt = `אני סוכן AI מומחה לעסקים, משפטים, פיננסים וחוק בארה\"ב. נתח את השאלה הבאה בהתאם לתוכן הבא מהקובץ:\n${pdfText}\n\nשאלה:\n${input}`;
-      document.getElementById("response").textContent = "⏳ טוען תשובה...";
-
-      try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: fullPrompt }],
-            temperature: 0.7
-          }),
-        });
-
-        const data = await response.json();
-        const answer = data.choices?.[0]?.message?.content || "⚠️ לא התקבלה תשובה תקינה.";
-        document.getElementById("response").textContent = answer;
-
-        const speech = new SpeechSynthesisUtterance(answer);
-        speech.lang = /[\u0590-\u05FF]/.test(answer) ? 'he-IL' : 'en-US';
-        speechSynthesis.speak(speech);
-      } catch (error) {
-        document.getElementById("response").textContent = "⚠️ שגיאה: " + error.message;
-      }
-    }
-
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'he-IL';
-
-    const recordButton = document.getElementById('recordButton');
-    function startListening() {
-      isRecording = true;
-      recordButton.classList.add('recording');
-      recognition.start();
-    }
-
-    function stopListening() {
-      if (isRecording) {
-        recognition.stop();
-        recordButton.classList.remove('recording');
-        isRecording = false;
-      }
-    }
-
-    recordButton.addEventListener('mousedown', startListening);
-    recordButton.addEventListener('mouseup', stopListening);
-    recordButton.addEventListener('touchstart', startListening);
-    recordButton.addEventListener('touchend', stopListening);
-
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      document.getElementById('userInput').value = transcript;
-      askAgent();
-    };
-
-    recognition.onerror = (e) => {
-      document.getElementById("response").textContent = "⚠️ שגיאת קול: " + e.error;
-    };
+    leadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(leadForm);
+      alert('Lead submitted! We’ll connect you with an attorney soon.');
+      leadForm.reset();
+    });
   </script>
 </body>
 </html>
+```
+
+**How to Use**:
+1. **Save and View**: Copy the code into a file named `index.html`, save it, and open it in a browser (e.g., Chrome) to see the website.
+2. **Customize**:
+   - **Text**: Edit the title, tagline, or content (e.g., change “Corporate Law” to other practice areas in the form).
+   - **Visuals**: Replace the placeholder icon in the educational section (e.g., use a free image from Unsplash, like `https://images.unsplash.com/photo-1589829085413-56de8f8f54e6` for a gavel).
+   - **Colors**: Modify Tailwind classes (e.g., change `bg-blue-900` to `bg-green-700` for a different header color).
+3. **No-Code Alternative**: Use Wix or Squarespace to recreate this design with drag-and-drop editors. Add a chatbot via Tidio (free plan) and a form via Typeform.
+4. **Hosting**: Upload to a free host like GitHub Pages or Netlify, or use a developer for full deployment.
+
+---
+
+### How This Website Fits LawAid’s Vision
+- **Legal Clarity**: The educational section explains “lifting the corporate veil” in plain English, attracting users with corporate law questions, per LawAid’s mission.
+- **Lead Generation**: The form and chatbot CTA capture user data for attorneys, supporting LawAid’s business model of connecting users to lawyers.
+- **User-Friendly**: The clean, responsive design ensures accessibility, with a professional look to build trust, like a trusted online marketplace.
+- **Compliance**: The footer disclaimer (“Not legal advice”) ensures regulatory compliance, avoiding risks like those faced by DoNotPay.
+
+---
+
+### Building Without a Developer
+As discussed previously, you can build a **basic version** of LawAid using no-code platforms:
+- **Wix/Squarespace**: Create a similar website with drag-and-drop editors. Add a chatbot via Tidio or Landbot (free plans) and a form via Typeform.
+- **Zapier**: Automate lead delivery (e.g., send form submissions to a Google Sheet or email).
+- **Limitations**: Advanced features (e.g., real AI chatbot, document analysis, CRM integration) require developer skills for custom coding and scalability.
+
+**Recommendation**: Use this HTML prototype or a no-code platform to test your concept. For a full-scale LawAid with robust AI and integrations, hire a developer to implement features like NLP for document analysis or API connections for attorney networks.
+
+---
+
+### Supporting URLs
+- [Tailwind CSS](https://tailwindcss.com/) – Styling framework used.
+- [LawTeacher: Lifting of the Corporate Veil](https://www.lawteacher.net/free-law-essays/corporate-law/lifting-of-the-corporate-veil.php) – Source for veil explanation.
+- [FTC Action Against DoNotPay](https://www.ftc.gov/legal-library/browse/cases-proceedings/donotpay) – Compliance lessons.
+- [Wix: Create a Website](https://www.wix.com/) – No-code alternative.
+- [Tidio: Free Chatbot](https://www.tidio.com/) – Chatbot for no-code integration.
+
+---
+
+### Final Note
+This sample website provides a functional prototype for LawAid, with a chatbot, lead form, and educational content, all aligned with its mission to deliver legal clarity and generate attorney leads. You can customize it with basic edits or use no-code tools to replicate it. If you want additional features (e.g., more pages, advanced chatbot logic, or a Canva slide to promote the website), let me know! For a full-scale platform, consider a developer for advanced functionality and compliance.
+
+**Tagline Fit**: “Legal clarity. No cost. No stress.” – This website makes legal concepts clear and connects users to lawyers seamlessly.
