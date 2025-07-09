@@ -51,190 +51,6 @@
     <div class="container mx-auto px-4">
       <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Ask LawAid Anything</h3>
       <div id="chat-container" class="border rounded-lg p-4 max-w-2xl mx-auto h-64 overflow-y-auto mb-4">
-        <div class="bot-bubble chat-bubble">Hi! I'm LawAid, powered by xAI. Ask me a legal question, like 'What’s lifting the corporate veil?'</div>
-      </div>
-      <div class="flex max-w-2xl mx-auto">
-        <input id="chat-input" type="text" class="flex-1 p-2 border rounded-l-lg" placeholder="Type your question...">
-        <button id="chat-submit" class="bg-blue-900 text-white px-4 py-2 rounded-r-lg hover:bg-blue-800">Send</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Educational Section -->
-  <section id="education" class="py-12 bg-gray-100">
-    <div class="container mx-auto px-4">
-      <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Learn About Lifting the Corporate Veil</h3>
-      <div class="max-w-2xl mx-auto text-gray-700">
-        <p class="mb-4">When a company is used for fraud or to dodge legal duties, courts may 'lift the corporate veil' to hold owners personally liable. For example, if a company hides debts, its owners might have to pay. LawAid explains complex terms simply and connects you to corporate law experts.</p>
-        <a href="#lead-form" class="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600">Talk to a Corporate Lawyer</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Lead Capture Form -->
-  <section id="lead-form" class="py-12 bg-white">
-    <div class="container mx-auto px-4">
-      <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Connect with an Attorney</h3>
-      <form id="leadForm" class="max-w-md mx-auto space-y-4">
-        <input type="text" name="name" placeholder="Your Name" required class="w-full p-2 border rounded-lg">
-        <input type="email" name="email" placeholder="Your Email" required class="w-full p-2 border rounded-lg">
-        <input type="text" name="location" placeholder="Your Location" required class="w-full p-2 border rounded-lg">
-        <select name="practice_area" required class="w-full p-2 border rounded-lg">
-          <option value="" disabled selected>Select Legal Issue</option>
-          <option value="corporate_law">Corporate Law</option>
-          <option value="family_law">Family Law</option>
-          <option value="personal_injury">Personal Injury</option>
-        </select>
-        <button type="submit" class="w-full bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Get Help Now</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-blue-900 text-white py-4">
-    <div class="container mx-auto px-4 text-center">
-      <p class="text-sm">LawAid provides general information, not legal advice. Consult a licensed attorney for professional guidance.</p>
-      <p class="text-sm mt-2">Contact: support@lawaid.com | © 2025 LawAid</p>
-    </div>
-  </footer>
-
-  <script>
-    const chatContainer = document.getElementById('chat-container');
-    const chatInput = document.getElementById('chat-input');
-    const chatSubmit = document.getElementById('chat-submit');
-    const leadForm = document.getElementById('leadForm');
-    const API_KEY = 'xai-5dpSkimfn2Wgsu3IKpMJdjoza7JD8R9U5ZrjjgLBFi39XpPfDePZgfSzfGiE6q0oFf3DN9J2vHAxs2nF';
-
-    async function fetchGrokResponse(question) {
-      try {
-        const response = await fetch('https://api.grok.xai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'grok-3', // Use Grok-3 or available model
-            messages: [
-              {
-                role: 'system',
-                content: 'You are LawAid, a legal advisor providing general information in plain English, not legal advice. Answer concisely, include a disclaimer, and suggest connecting with a lawyer for specific advice.'
-              },
-              {
-                role: 'user',
-                content: question
-              }
-            ],
-            max_tokens: 150,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) throw new Error('Invalid API key');
-          if (response.status === 429) throw new Error('Rate limit exceeded');
-          throw new Error(`API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content || 'Sorry, I couldn’t process that. Try again or connect with a lawyer below. <br><i>Not legal advice; consult an attorney.</i>';
-      } catch (error) {
-        console.error('API call failed:', error.message);
-        return `Sorry, I’m having trouble answering right now: ${error.message}. Try asking about 'lifting the corporate veil' or enter your details below to connect with a lawyer. <br><i>Not legal advice; consult an attorney.</i>`;
-      }
-    }
-
-    chatSubmit.addEventListener('click', async () => {
-      const userInput = chatInput.value.trim();
-      if (!userInput) return;
-
-      // Add user message
-      const userBubble = document.createElement('div');
-      userBubble.className = 'user-bubble chat-bubble';
-      userBubble.textContent = userInput;
-      chatContainer.appendChild(userBubble);
-
-      // Fetch and display bot response
-      const botBubble = document.createElement('div');
-      botBubble.className = 'bot-bubble chat-bubble';
-      botBubble.innerHTML = await fetchGrokResponse(userInput) + 
-        ` <br><a href="#lead-form" class="text-blue-900 underline">Connect with a lawyer</a>`;
-      chatContainer.appendChild(botBubble);
-
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-      chatInput.value = '';
-    });
-
-    leadForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const formData = new FormData(leadForm);
-      alert('Lead submitted! We’ll connect you with an attorney soon.');
-      leadForm.reset();
-    });
-  </script>
-</body>
-</html>
-```
-
----
-
-### Alternative: ChatGPT API Version
-If you prefer to use OpenAI’s ChatGPT API instead, here’s an alternative version with the same features but using the OpenAI endpoint (`https://api.openai.com/v1/chat/completions`). You’ll need to provide your own OpenAI API key, as I can’t access or generate one.
-
-<xaiArtifact artifact_id="28253ddc-d482-4011-b399-d5393ff906dd" artifact_version_id="4768eb10-290e-497d-97dd-183d3d814256" title="index_openai.html" contentType="text/html">
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LawAid: Free Legal Advisor for All</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .chat-bubble {
-      max-width: 80%;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 5px 0;
-    }
-    .user-bubble {
-      background: #e6f3ff;
-      margin-left: auto;
-      text-align: right;
-    }
-    .bot-bubble {
-      background: #f3f4f6;
-      margin-right: auto;
-    }
-  </style>
-</head>
-<body class="bg-gray-100 font-sans">
-  <!-- Header -->
-  <header class="bg-blue-900 text-white py-4">
-    <div class="container mx-auto px-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">LawAid</h1>
-      <nav>
-        <a href="#home" class="mx-2 hover:underline">Home</a>
-        <a href="#chatbot" class="mx-2 hover:underline">Ask a Question</a>
-        <a href="#lead-form" class="mx-2 hover:underline">Get Legal Help</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section id="home" class="bg-blue-100 py-16 text-center">
-    <div class="container mx-auto px-4">
-      <h2 class="text-4xl font-bold text-blue-900 mb-4">LawAid: Legal Clarity. No Cost. No Stress.</h2>
-      <p class="text-lg text-gray-700 mb-6">Get instant answers to legal questions and connect with expert attorneys for free.</p>
-      <a href="#lead-form" class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600">Find a Lawyer Now</a>
-    </div>
-  </section>
-
-  <!-- Chatbot Section -->
-  <section id="chatbot" class="py-12 bg-white">
-    <div class="container mx-auto px-4">
-      <h3 class="text-2xl font-bold text-blue-900 mb-4 text-center">Ask LawAid Anything</h3>
-      <div id="chat-container" class="border rounded-lg p-4 max-w-2xl mx-auto h-64 overflow-y-auto mb-4">
         <div class="bot-bubble chat-bubble">Hi! I'm LawAid, powered by ChatGPT. Ask me a legal question, like 'What’s lifting the corporate veil?'</div>
       </div>
       <div class="flex max-w-2xl mx-auto">
@@ -287,7 +103,7 @@ If you prefer to use OpenAI’s ChatGPT API instead, here’s an alternative ver
     const chatInput = document.getElementById('chat-input');
     const chatSubmit = document.getElementById('chat-submit');
     const leadForm = document.getElementById('leadForm');
-    const API_KEY = 'YOUR_OPENAI_API_KEY'; // Replace with your OpenAI API key from platform.openai.com
+    const API_KEY = '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';
 
     async function fetchChatGPTResponse(question) {
       try {
@@ -298,11 +114,11 @@ If you prefer to use OpenAI’s ChatGPT API instead, here’s an alternative ver
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: 'gpt-4',
+            model: 'gpt-4o-mini', // Fallback to gpt-3.5-turbo if needed
             messages: [
               {
                 role: 'system',
-                content: 'You are LawAid, a legal advisor providing general information in plain English, not legal advice. Answer concisely, include a disclaimer, and suggest connecting with a lawyer for specific advice.'
+                content: 'You are LawAid, a legal advisor providing general information in plain English, not legal advice. Answer concisely, include a disclaimer ("Not legal advice; consult an attorney"), and suggest connecting with a lawyer for specific advice.'
               },
               {
                 role: 'user',
@@ -315,16 +131,17 @@ If you prefer to use OpenAI’s ChatGPT API instead, here’s an alternative ver
         });
 
         if (!response.ok) {
-          if (response.status === 401) throw new Error('Invalid API key');
-          if (response.status === 429) throw new Error('Rate limit exceeded');
+          if (response.status === 401) throw new Error('Invalid API key. Please check your OpenAI API key in the OpenAI dashboard.');
+          if (response.status === 429) throw new Error('Rate limit exceeded. Please wait and try again.');
+          if (response.status === 400) throw new Error('Model not accessible. Try using gpt-3.5-turbo.');
           throw new Error(`API error: ${response.status}`);
         }
 
         const data = await response.json();
-        return data.choices[0].message.content || 'Sorry, I couldn’t process that. Try again or connect with a lawyer below. <br><i>Not legal advice; consult an attorney.</i>';
+        return data.choices[0].message.content || 'Sorry, I couldn’t process that. Try connecting with a lawyer below. <br><i>Not legal advice; consult an attorney.</i>';
       } catch (error) {
         console.error('API call failed:', error.message);
-        return `Sorry, I’m having trouble answering right now: ${error.message}. Try asking about 'lifting the corporate veil' or enter your details below to connect with a lawyer. <br><i>Not legal advice; consult an attorney.</i>`;
+        return `Sorry, I’m having trouble answering: ${error.message}. Try asking about ‘lifting the corporate veil’ or enter your details below to connect with a lawyer. <br><i>Not legal advice; consult an attorney.</i>`;
       }
     }
 
@@ -338,11 +155,11 @@ If you prefer to use OpenAI’s ChatGPT API instead, here’s an alternative ver
       userBubble.textContent = userInput;
       chatContainer.appendChild(userBubble);
 
-      // Fetch and display bot response
+      // Fetch and display chatbot response
       const botBubble = document.createElement('div');
       botBubble.className = 'bot-bubble chat-bubble';
       botBubble.innerHTML = await fetchChatGPTResponse(userInput) + 
-        ` <br><a href="#lead-form" class="text-blue-900 underline">Connect with a lawyer</a>`;
+        '<br><a href="#lead-form" class="text-blue-600 underline">Connect with a lawyer</a>';
       chatContainer.appendChild(botBubble);
 
       chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -358,3 +175,4 @@ If you prefer to use OpenAI’s ChatGPT API instead, here’s an alternative ver
   </script>
 </body>
 </html>
+```
