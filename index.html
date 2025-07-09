@@ -103,7 +103,7 @@
     const chatInput = document.getElementById('chat-input');
     const chatSubmit = document.getElementById('chat-submit');
     const leadForm = document.getElementById('leadForm');
-    const API_KEY = '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';
+    const API_KEY = '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';
 
     async function fetchChatGPTResponse(question) {
       // Check if the question is legal-related
@@ -140,8 +140,8 @@
 
         if (!response.ok) {
           if (response.status === 401) throw new Error('Invalid API key. Please check your OpenAI API key in the OpenAI dashboard.');
-          if (response.status === 429) throw new Error('Rate limit exceeded. Please wait and try again.');
-          if (response.status === 400) throw new Error('Model not accessible. Try using gpt-3.5-turbo.');
+          if (response.status === 429) throw new Error('Rate limit exceeded. Please wait a few seconds and try again.');
+          if (response.status === 400) throw new Error('Model not accessible. Try using gpt-3.5-turbo or check your account permissions.');
           throw new Error(`API error: ${response.status}`);
         }
 
@@ -183,5 +183,3 @@
   </script>
 </body>
 </html>
-```
-
