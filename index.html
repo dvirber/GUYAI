@@ -63,15 +63,19 @@
       padding: 1rem;
       border-radius: 8px;
       margin-bottom: 1rem;
+      background-color: #fafafa;
     }
     .message {
       margin: 0.5rem 0;
+      line-height: 1.5;
     }
     .user {
       color: #1a73e8;
+      font-weight: bold;
     }
     .bot {
       color: #0b8043;
+      font-weight: bold;
     }
     .mic-button {
       background-color: #0b0c2a;
@@ -120,8 +124,8 @@
 
     function appendMessage(text, sender) {
       const msg = document.createElement('div');
-      msg.className = 'message ' + sender;
-      msg.textContent = sender.toUpperCase() + ': ' + text;
+      msg.className = 'message';
+      msg.innerHTML = `<span class="${sender}">${sender.toUpperCase()}</span>: ${text}`;
       chatBox.appendChild(msg);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -137,7 +141,7 @@
 
     function simulateBotReply(userInput) {
       setTimeout(() => {
-        const reply = "This is a placeholder legal reply to: '" + userInput + "'.";
+        const reply = "Thanks for your question. Here's a placeholder legal reply to: '" + userInput + "'. Real AI will be added soon.";
         appendMessage(reply, 'bot');
       }, 1000);
     }
