@@ -2,364 +2,145 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LAW AID – Your AI Legal Assistant</title>
-  <meta name="description" content="LAW AID: The AI-powered legal agent that makes legal help accessible, fast, and reliable.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAWID - AI Legal Assistant</title>
   <style>
-    :root {
-      --primary: #1a237e;
-      --accent: #ffd600;
-      --bg: #f8f9fa;
-      --text: #222;
-      --header-bg: #fff;
-      --footer-bg: #222;
-      --footer-text: #fff;
-      --radius: 12px;
-      --shadow: 0 4px 24px rgba(30,40,90,0.08);
-    }
-    * { box-sizing: border-box; }
-    html, body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      scroll-behavior: smooth;
     }
-    header {
-      background: var(--header-bg);
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .nav-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 2rem;
-    }
-    .logo {
-      font-weight: 800;
-      font-size: 1.5rem;
-      color: var(--primary);
-      letter-spacing: 2px;
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-    }
-    nav {
-      display: flex;
-      gap: 2rem;
-    }
-    nav a {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    nav a:hover {
-      color: var(--primary);
-    }
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      color: var(--primary);
-      cursor: pointer;
-    }
-    /* Hero */
-    .hero {
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: #222;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 70vh;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #0b0c2a;
+      color: white;
+      padding: 1.5rem;
       text-align: center;
-      padding: 3rem 1rem 2rem 1rem;
-      background: linear-gradient(120deg, #e3e7fd 0%, #f8f9fa 100%);
-    }
-    .hero h1 {
-      font-size: 2.7rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      color: var(--primary);
-    }
-    .hero p {
-      font-size: 1.25rem;
-      max-width: 600px;
-      margin: 0 auto 2rem auto;
-      color: #333;
-    }
-    .cta-btn {
-      background: var(--primary);
-      color: #fff;
-      font-weight: 600;
-      padding: 0.9em 2.2em;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 1.1rem;
-      box-shadow: 0 2px 12px rgba(26,35,126,0.08);
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-      margin-top: 1rem;
-    }
-    .cta-btn:hover {
-      background: #0d133d;
-      transform: translateY(-2px) scale(1.03);
-    }
-    /* Features */
-    .features {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3rem 1rem 2rem 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2rem;
-    }
-    .feature-card {
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .feature-card:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 8px 32px rgba(26,35,126,0.12);
-    }
-    .feature-icon {
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-    .feature-title {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    .feature-desc {
-      color: #444;
-      font-size: 1rem;
-    }
-    /* How it helps */
-    .how-section {
-      background: #fffde7;
-      padding: 3rem 1rem;
-      margin: 3rem 0 2rem 0;
-    }
-    .how-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 2.5rem;
-      justify-content: space-between;
-    }
-    .how-text {
-      flex: 1 1 320px;
-      min-width: 260px;
-    }
-    .how-title {
       font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .how-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .how-list li {
-      margin-bottom: 1.1rem;
-      font-size: 1.08rem;
+    nav {
+      background-color: #1c1d3b;
       display: flex;
-      align-items: flex-start;
-      gap: 0.7em;
+      justify-content: center;
+      padding: 0.75rem 0;
     }
-    .how-list li::before {
-      content: "✔";
-      color: var(--accent);
-      font-size: 1.2em;
-      margin-right: 0.5em;
-      margin-top: 0.1em;
-    }
-    .how-img {
-      flex: 1 1 320px;
-      min-width: 260px;
-      text-align: center;
-    }
-    .how-img img {
-      max-width: 320px;
-      width: 100%;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 24px rgba(26,35,126,0.10);
-    }
-    /* Footer */
-    footer {
-      background: var(--footer-bg);
-      color: var(--footer-text);
-      padding: 2rem 1rem 1rem 1rem;
-      text-align: center;
-    }
-    .footer-links {
-      margin-bottom: 1rem;
-    }
-    .footer-links a {
-      color: var(--accent);
+    nav a {
+      color: #ddd;
       text-decoration: none;
       margin: 0 1rem;
-      font-weight: 600;
-      transition: color 0.2s;
+      font-weight: 500;
     }
-    .footer-links a:hover {
+    nav a:hover {
       color: #fff;
     }
-    .footer-contact {
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+    .chat-wrapper {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 800px;
+    }
+    .chat-box {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .message {
+      margin: 0.5rem 0;
+    }
+    .user {
+      color: #1a73e8;
+    }
+    .bot {
+      color: #0b8043;
+    }
+    .mic-button {
+      background-color: #0b0c2a;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
       font-size: 1rem;
-      margin-bottom: 0.5rem;
+      cursor: pointer;
     }
-    /* Responsive */
-    @media (max-width: 800px) {
-      .nav-container { padding: 1rem; }
-      .features { grid-template-columns: 1fr; }
-      .how-container { flex-direction: column; gap: 2rem; }
-      .how-img img { max-width: 220px; }
+    .mic-button:hover {
+      background-color: #22244d;
     }
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 2rem; }
-      .nav-container { flex-direction: column; gap: 0.5rem; }
-      nav { flex-direction: column; gap: 1rem; }
-      .footer-links a { margin: 0 0.5rem; }
-    }
-    /* Mobile nav */
-    @media (max-width: 700px) {
-      nav {
-        display: none;
-        flex-direction: column;
-        background: #fff;
-        position: absolute;
-        top: 60px;
-        right: 2rem;
-        box-shadow: var(--shadow);
-        border-radius: var(--radius);
-        padding: 1rem 2rem;
-        z-index: 200;
-      }
-      nav.open { display: flex; }
-      .menu-toggle { display: block; }
+    footer {
+      background-color: #0b0c2a;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="nav-container">
-      <div class="logo">
-        <span style="font-size:1.5em; color:var(--accent);">⚖️</span> LAW AID
-      </div>
-      <button class="menu-toggle" aria-label="Open navigation" onclick="toggleMenu()">☰</button>
-      <nav id="main-nav">
-        <a href="#hero">Home</a>
-        <a href="#features">Features</a>
-        <a href="#how">How It Helps</a>
-        <a href="#contact">Contact</a>
-      </nav>
+  <header>LAWID - Your Legal AI Advisor</header>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
+  </nav>
+  <main>
+    <div class="chat-wrapper">
+      <div class="chat-box" id="chat"></div>
+      <button class="mic-button" onclick="startListening()">🎤 Start Talking</button>
     </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero" id="hero">
-    <h1>AI-Powered Legal Help, Instantly</h1>
-    <p>
-      LAW AID is your always-available AI legal agent. Get clear, reliable answers to your legal questions, draft documents, and understand your rights — all in seconds.
-    </p>
-    <a href="#contact" class="cta-btn">Talk to the AI Agent</a>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features" id="features">
-    <div class="feature-card">
-      <div class="feature-icon">🤖</div>
-      <div class="feature-title">24/7 AI Legal Agent</div>
-      <div class="feature-desc">Get instant answers to legal questions, anytime. No waiting, no appointments.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📄</div>
-      <div class="feature-title">Document Drafting</div>
-      <div class="feature-desc">Generate contracts, letters, and legal forms tailored to your needs in seconds.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <div class="feature-title">Confidential & Secure</div>
-      <div class="feature-desc">Your privacy is our priority. All conversations are encrypted and confidential.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🌎</div>
-      <div class="feature-title">Accessible to All</div>
-      <div class="feature-desc">Legal help shouldn’t be complicated or expensive. LAW AID is here for everyone.</div>
-    </div>
-  </section>
-
-  <!-- How It Helps Section -->
-  <section class="how-section" id="how">
-    <div class="how-container">
-      <div class="how-text">
-        <div class="how-title">How LAW AID Empowers You</div>
-        <ul class="how-list">
-          <li>Understand your legal rights and options in plain language</li>
-          <li>Draft and review legal documents with AI guidance</li>
-          <li>Save time and money compared to traditional legal services</li>
-          <li>Get support for contracts, employment, housing, family law, and more</li>
-          <li>Connect with a human lawyer if you need further help</li>
-        </ul>
-      </div>
-      <div class="how-img">
-        <img src="https://images.unsplash.com/photo-1555375771-5b1c6a5b8c39?auto=format&fit=crop&w=600&q=80" alt="LAW AID AI Legal Agent illustration" />
-      </div>
-    </div>
-  </section>
-
-  <!-- Call to Action (repeated) -->
-  <section class="hero" style="padding:2rem 1rem 2rem 1rem; min-height:unset;">
-    <h2 style="font-size:2rem; font-weight:700; margin-bottom:0.5em;">Ready for Smarter Legal Help?</h2>
-    <a href="#contact" class="cta-btn">Talk to the AI Agent</a>
-  </section>
-
-  <!-- Contact / Footer -->
-  <footer id="contact">
-    <div class="footer-links">
-      <a href="mailto:info@lawaid.com">Email</a>
-      <a href="#">LinkedIn</a>
-      <a href="#">Twitter</a>
-    </div>
-    <div class="footer-contact">
-      &copy; 2024 LAW AID. All rights reserved.
-    </div>
-    <div style="font-size:0.95em; color:#aaa;">
-      This is a demo legal-tech project. Not a substitute for professional legal advice.
-    </div>
+  </main>
+  <footer>
+    &copy; 2025 LAWID. All rights reserved. | Legal AI Assistance with Trust
   </footer>
 
   <script>
-    // Mobile nav toggle
-    function toggleMenu() {
-      var nav = document.getElementById('main-nav');
-      nav.classList.toggle('open');
+    const chatBox = document.getElementById('chat');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+
+    function appendMessage(text, sender) {
+      const msg = document.createElement('div');
+      msg.className = 'message ' + sender;
+      msg.textContent = sender.toUpperCase() + ': ' + text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
-    // Close nav on link click (mobile)
-    document.querySelectorAll('#main-nav a').forEach(function(link) {
-      link.addEventListener('click', function() {
-        document.getElementById('main-nav').classList.remove('open');
-      });
-    });
+
+    function startListening() {
+      recognition.start();
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        appendMessage(transcript, 'user');
+        simulateBotReply(transcript);
+      };
+    }
+
+    function simulateBotReply(userInput) {
+      setTimeout(() => {
+        const reply = "This is a placeholder legal reply to: '" + userInput + "'.";
+        appendMessage(reply, 'bot');
+      }, 1000);
+    }
   </script>
 </body>
 </html>
