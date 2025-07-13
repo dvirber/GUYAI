@@ -6,7 +6,7 @@
   <title>LAWID - Your AI Legal Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -20,6 +20,13 @@
       --navy-light: #334155;
       --blue: #3b82f6;
       --blue-light: #60a5fa;
+      --blue-dark: #2563eb;
+      --green: #10b981;
+      --green-light: #34d399;
+      --red: #ef4444;
+      --red-light: #f87171;
+      --purple: #8b5cf6;
+      --purple-light: #a78bfa;
       --gray-dark: #475569;
       --gray: #64748b;
       --gray-light: #94a3b8;
@@ -28,6 +35,8 @@
       --border: #e2e8f0;
       --shadow: rgba(0, 0, 0, 0.1);
       --shadow-dark: rgba(0, 0, 0, 0.15);
+      --gradient-primary: linear-gradient(135deg, var(--blue), var(--purple));
+      --gradient-secondary: linear-gradient(135deg, var(--navy-dark), var(--navy));
     }
 
     body {
@@ -38,9 +47,54 @@
       overflow-x: hidden;
     }
 
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-secondary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: var(--white);
+    }
+
+    .loading-logo {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid var(--blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
     /* Header */
     .header {
-      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+      background: var(--gradient-secondary);
       color: var(--white);
       position: fixed;
       top: 0;
@@ -50,6 +104,11 @@
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 20px var(--shadow-dark);
+      transition: all 0.3s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(15, 23, 42, 0.95);
     }
 
     .header-container {
@@ -64,14 +123,19 @@
 
     .logo {
       font-size: 2rem;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--white);
       text-decoration: none;
       letter-spacing: -1px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
     }
 
     .logo span {
-      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      background: var(--gradient-primary);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -97,11 +161,28 @@
     .nav a:hover {
       color: var(--white);
       background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-primary);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav a:hover::after {
+      width: 80%;
     }
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-light) 100%);
+      background: var(--gradient-secondary);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -129,6 +210,12 @@
       font-size: 15rem;
       opacity: 0.1;
       transform: rotate(15deg);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: rotate(15deg) translateY(0px); }
+      50% { transform: rotate(15deg) translateY(-20px); }
     }
 
     .hero-container {
@@ -142,11 +229,12 @@
 
     .hero h1 {
       font-size: clamp(3rem, 6vw, 5rem);
-      font-weight: 800;
+      font-weight: 900;
       color: var(--white);
       margin-bottom: 1.5rem;
       letter-spacing: -2px;
       line-height: 1.1;
+      animation: fadeInUp 1s ease;
     }
 
     .hero h2 {
@@ -155,6 +243,7 @@
       color: var(--blue-light);
       margin-bottom: 2rem;
       letter-spacing: -0.5px;
+      animation: fadeInUp 1s ease 0.2s both;
     }
 
     .hero p {
@@ -165,10 +254,20 @@
       margin-left: auto;
       margin-right: auto;
       font-weight: 400;
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    .input-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      animation: fadeInUp 1s ease 0.6s both;
     }
 
     .voice-button {
-      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      background: var(--gradient-primary);
       color: var(--white);
       border: none;
       padding: 2rem 4rem;
@@ -181,7 +280,6 @@
       display: inline-flex;
       align-items: center;
       gap: 1.5rem;
-      margin-bottom: 3rem;
       position: relative;
       overflow: hidden;
     }
@@ -211,7 +309,7 @@
     }
 
     .voice-button.recording {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
+      background: linear-gradient(135deg, var(--red), var(--red-light));
       animation: pulse 2s infinite;
     }
 
@@ -222,6 +320,90 @@
 
     .voice-icon {
       font-size: 2rem;
+    }
+
+    .text-input-container {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .text-input {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      font-size: 1.1rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .text-input::placeholder {
+      color: var(--gray-light);
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .send-button {
+      background: var(--gradient-primary);
+      color: var(--white);
+      border: none;
+      padding: 1.5rem 2rem;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .send-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .input-toggle {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .toggle-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--gray-light);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-button.active {
+      background: var(--gradient-primary);
+      color: var(--white);
+      border-color: transparent;
+    }
+
+    .toggle-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+    }
+
+    .toggle-button.active:hover {
+      background: var(--gradient-primary);
     }
 
     /* Main Content */
@@ -250,10 +432,16 @@
       box-shadow: 0 25px 60px var(--shadow);
       overflow: hidden;
       border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .chat-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 80px var(--shadow-dark);
     }
 
     .chat-header {
-      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      background: var(--gradient-secondary);
       color: var(--white);
       padding: 2.5rem;
       text-align: center;
@@ -308,7 +496,7 @@
     }
 
     .message.user .message-content {
-      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      background: var(--gradient-primary);
       color: var(--white);
       border-bottom-right-radius: 8px;
       box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
@@ -366,10 +554,16 @@
       box-shadow: 0 25px 60px var(--shadow);
       overflow: hidden;
       border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .upload-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 80px var(--shadow-dark);
     }
 
     .upload-header {
-      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      background: var(--gradient-secondary);
       color: var(--white);
       padding: 2.5rem;
       text-align: center;
@@ -493,9 +687,53 @@
       line-height: 1.6;
     }
 
+    /* Features Section */
+    .features-section {
+      padding: 6rem 0;
+      background: var(--white);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+
+    .feature-card {
+      background: var(--off-white);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px var(--shadow);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
     /* Footer */
     .footer {
-      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      background: var(--gradient-secondary);
       color: var(--white);
       padding: 4rem 0 2rem;
     }
@@ -578,6 +816,10 @@
         font-size: 1.2rem;
       }
 
+      .text-input-container {
+        flex-direction: column;
+      }
+
       .footer-content {
         flex-direction: column;
         text-align: center;
@@ -652,11 +894,43 @@
     .chat-messages::-webkit-scrollbar-thumb:hover {
       background: var(--gray-dark);
     }
+
+    /* Utility Classes */
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .slide-up {
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-content">
+      <div class="loading-logo">LAW<span>ID</span></div>
+      <div class="loading-spinner"></div>
+      <p>Loading your AI legal assistant...</p>
+    </div>
+  </div>
+
   <!-- Header -->
-  <header class="header">
+  <header class="header" id="header">
     <div class="header-container">
       <a href="#" class="logo">LAW<span>ID</span></a>
       <nav>
@@ -676,12 +950,29 @@
       <h1>Talk to LAWID</h1>
       <h2>Your AI Legal Assistant</h2>
       <p>Speak your legal questions. Upload files. Get smart guidance.</p>
-      <button class="voice-button" id="voiceButton" onclick="toggleVoice()">
-        <span class="voice-icon" id="voiceIcon">🎤</span>
-        <span id="voiceText">Start Speaking</span>
-      </button>
+      
+      <div class="input-section">
+        <button class="voice-button" id="voiceButton" onclick="toggleVoice()">
+          <span class="voice-icon" id="voiceIcon">🎤</span>
+          <span id="voiceText">Start Speaking</span>
+        </button>
+        
+        <div class="text-input-container" id="textInputContainer">
+          <input type="text" class="text-input" id="textInput" placeholder="Type your legal question here..." onkeypress="handleTextInput(event)">
+          <button class="send-button" onclick="sendTextMessage()">
+            <span>Send</span>
+            <span>📤</span>
+          </button>
+        </div>
+        
+        <div class="input-toggle">
+          <button class="toggle-button active" onclick="switchToVoice()">🎤 Voice</button>
+          <button class="toggle-button" onclick="switchToText()">⌨️ Text</button>
+        </div>
+      </div>
+      
       <p style="font-size: 0.95rem; color: var(--gray-light); margin-top: 1rem;">
-        Click the microphone and ask your legal question
+        Choose your preferred input method above
       </p>
     </div>
   </section>
@@ -693,13 +984,13 @@
         <!-- Chat Section -->
         <div class="chat-section">
           <div class="chat-header">
-            <h3>🎤 Voice Conversation</h3>
+            <h3>🎤 Voice & Text Conversation</h3>
             <p>Your legal questions and AI responses appear here</p>
           </div>
           <div class="chat-messages" id="chatMessages">
             <div class="message bot">
               <div class="message-content">
-                Hello! I'm LAWID, your AI legal assistant. I'm here to help you with legal questions and document analysis. Click the microphone button above and start speaking your legal question.
+                Hello! I'm LAWID, your AI legal assistant. I'm here to help you with legal questions and document analysis. You can speak to me or type your questions - I'm ready to assist!
               </div>
               <div class="message-time">Just now</div>
             </div>
@@ -729,6 +1020,56 @@
     </div>
   </main>
 
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2.5rem; font-weight: 800; color: var(--navy); margin-bottom: 1rem;">Why Choose LAWID?</h2>
+        <p style="font-size: 1.2rem; color: var(--gray); max-width: 600px; margin: 0 auto;">
+          Advanced AI-powered legal assistance with cutting-edge technology
+        </p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎤</div>
+          <h3>Voice & Text Input</h3>
+          <p>Speak naturally or type your legal questions. Our AI understands both methods and provides comprehensive responses.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>Document Analysis</h3>
+          <p>Upload legal documents and get instant AI-powered analysis, summaries, and key insights from your contracts and briefs.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Responses</h3>
+          <p>Get immediate legal guidance and analysis. Our AI processes your questions and documents in real-time.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure & Private</h3>
+          <p>Your legal information is protected with enterprise-grade security. All conversations and documents are encrypted.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Accurate Analysis</h3>
+          <p>Powered by advanced legal AI trained on millions of cases, statutes, and legal documents for reliable guidance.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Always Available</h3>
+          <p>Access your AI legal assistant 24/7 from any device. No appointments needed, instant legal guidance when you need it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -742,12 +1083,35 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 LAWID. All rights reserved.</p>
+        <p>&copy; 2025 LAWID. All rights reserved. | AI-powered legal assistance for informational purposes only.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+          This service does not constitute legal advice. Please consult with a qualified attorney for specific legal guidance.
+        </p>
       </div>
     </div>
   </footer>
 
   <script>
+    // Loading Screen
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        setTimeout(() => {
+          document.getElementById('loadingScreen').style.display = 'none';
+        }, 500);
+      }, 2000);
+    });
+
+    // Header Scroll Effect
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
     // Speech Recognition Setup
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
@@ -759,12 +1123,42 @@
     const voiceButton = document.getElementById('voiceButton');
     const voiceIcon = document.getElementById('voiceIcon');
     const voiceText = document.getElementById('voiceText');
+    const textInput = document.getElementById('textInput');
+    const textInputContainer = document.getElementById('textInputContainer');
     const chatMessages = document.getElementById('chatMessages');
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
     const uploadedFiles = document.getElementById('uploadedFiles');
 
     let isListening = false;
+    let currentInputMode = 'voice';
+
+    // Input Mode Functions
+    function switchToVoice() {
+      currentInputMode = 'voice';
+      textInputContainer.classList.add('hidden');
+      voiceButton.classList.remove('hidden');
+      updateToggleButtons();
+    }
+
+    function switchToText() {
+      currentInputMode = 'text';
+      textInputContainer.classList.remove('hidden');
+      voiceButton.classList.add('hidden');
+      updateToggleButtons();
+      textInput.focus();
+    }
+
+    function updateToggleButtons() {
+      const buttons = document.querySelectorAll('.toggle-button');
+      buttons.forEach(button => button.classList.remove('active'));
+      
+      if (currentInputMode === 'voice') {
+        buttons[0].classList.add('active');
+      } else {
+        buttons[1].classList.add('active');
+      }
+    }
 
     // Voice Functions
     function toggleVoice() {
@@ -801,6 +1195,22 @@
         voiceText.textContent = 'Start Speaking';
       } catch (error) {
         console.error('Error stopping speech recognition:', error);
+      }
+    }
+
+    // Text Input Functions
+    function handleTextInput(event) {
+      if (event.key === 'Enter') {
+        sendTextMessage();
+      }
+    }
+
+    function sendTextMessage() {
+      const text = textInput.value.trim();
+      if (text) {
+        addMessage(text, 'user');
+        textInput.value = '';
+        simulateAIResponse(text);
       }
     }
 
@@ -973,6 +1383,9 @@
     setTimeout(() => {
       addMessage("You can also upload legal documents for analysis using the panel on the right. I can analyze contracts, briefs, and other legal documents to provide insights and summaries.", 'bot');
     }, 4000);
+
+    // Initialize
+    updateToggleButtons();
   </script>
 </body>
 </html> 
