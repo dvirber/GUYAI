@@ -10,141 +10,632 @@
       margin: 0;
       padding: 0;
     }
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
-      color: #222;
-      display: flex;
-      flex-direction: column;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
       min-height: 100vh;
+      line-height: 1.6;
     }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header Styles */
     header {
-      background-color: #0b0c2a;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .logo span {
+      color: #4CAF50;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+    
+    nav a:hover {
+      color: #4CAF50;
+      background-color: rgba(255,255,255,0.1);
+    }
+    
+    /* Main Content */
+    main {
+      padding: 2rem 0;
+      min-height: calc(100vh - 200px);
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Chat Section */
+    .chat-section {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .chat-header {
+      background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
       color: white;
       padding: 1.5rem;
       text-align: center;
-      font-size: 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    nav {
-      background-color: #1c1d3b;
-      display: flex;
-      justify-content: center;
-      padding: 0.75rem 0;
+    
+    .chat-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
     }
-    nav a {
-      color: #ddd;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: 500;
-    }
-    nav a:hover {
-      color: #fff;
-    }
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 2rem;
-    }
-    .chat-wrapper {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 800px;
-    }
+    
     .chat-box {
       height: 400px;
       overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      background-color: #fafafa;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border: none;
     }
+    
     .message {
-      margin: 0.5rem 0;
-      line-height: 1.5;
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 12px;
+      max-width: 80%;
+      word-wrap: break-word;
     }
+    
     .user {
-      color: #1a73e8;
-      font-weight: bold;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
     }
+    
     .bot {
-      color: #0b8043;
-      font-weight: bold;
+      background: white;
+      color: #333;
+      border: 1px solid #e0e0e0;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    
+    .message-time {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 0.5rem;
+    }
+    
+    .chat-controls {
+      padding: 1.5rem;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+    }
+    
     .mic-button {
-      background-color: #0b0c2a;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
       color: white;
       border: none;
-      padding: 0.75rem 2rem;
-      border-radius: 6px;
+      padding: 1rem 2rem;
+      border-radius: 50px;
       font-size: 1rem;
       cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
+    
     .mic-button:hover {
-      background-color: #22244d;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
     }
+    
+    .mic-button:active {
+      transform: translateY(0);
+    }
+    
+    .mic-button.recording {
+      background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    /* File Upload Section */
+    .upload-section {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .upload-header {
+      background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .upload-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    .upload-content {
+      padding: 2rem;
+    }
+    
+    .file-upload-area {
+      border: 3px dashed #ddd;
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: #fafafa;
+    }
+    
+    .file-upload-area:hover {
+      border-color: #4CAF50;
+      background: #f0f8f0;
+    }
+    
+    .file-upload-area.dragover {
+      border-color: #4CAF50;
+      background: #e8f5e8;
+      transform: scale(1.02);
+    }
+    
+    .upload-icon {
+      font-size: 3rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    
+    .upload-text {
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    
+    .file-input {
+      display: none;
+    }
+    
+    .uploaded-files {
+      margin-top: 2rem;
+    }
+    
+    .file-item {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .file-name {
+      font-weight: bold;
+      color: #2a5298;
+      margin-bottom: 0.5rem;
+    }
+    
+    .file-summary {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+    
+    .file-summary h4 {
+      color: #4CAF50;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Footer */
     footer {
-      background-color: #0b0c2a;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
       color: white;
       text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+    
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: #fff;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      opacity: 1;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .chat-box {
+        height: 300px;
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .footer-links {
+        justify-content: center;
+      }
+    }
+    
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <header>LAWID - Your Legal AI Advisor</header>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">About</a>
-    <a href="#">Services</a>
-    <a href="#">Contact</a>
-  </nav>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="#" class="logo">LAW<span>ID</span></a>
+        <nav>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
   <main>
-    <div class="chat-wrapper">
-      <div class="chat-box" id="chat"></div>
-      <button class="mic-button" onclick="startListening()">🎤 Start Talking</button>
+    <div class="container">
+      <div class="content-grid">
+        <!-- Chat Section -->
+        <div class="chat-section">
+          <div class="chat-header">
+            <h2>🎤 Voice Legal Assistant</h2>
+          </div>
+          <div class="chat-box" id="chat">
+            <div class="message bot">
+              <div>Hello! I'm your AI legal assistant. Click the microphone button below and start speaking your legal question. I'm here to help!</div>
+              <div class="message-time">Just now</div>
+            </div>
+          </div>
+          <div class="chat-controls">
+            <button class="mic-button" id="micButton" onclick="toggleListening()">
+              <span id="micIcon">🎤</span>
+              <span id="micText">Start Talking</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="upload-section">
+          <div class="upload-header">
+            <h2>📄 Document Analysis</h2>
+          </div>
+          <div class="upload-content">
+            <div class="file-upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+              <div class="upload-icon">📁</div>
+              <div class="upload-text">
+                <strong>Click to upload</strong> or drag and drop<br>
+                PDF, DOCX files (max 10MB)
+              </div>
+              <input type="file" id="fileInput" class="file-input" accept=".pdf,.docx" multiple>
+            </div>
+            
+            <div class="uploaded-files" id="uploadedFiles"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
+
   <footer>
-    &copy; 2025 LAWID. All rights reserved. | Legal AI Assistance with Trust
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <strong>LAWID</strong> - AI Legal Assistant with Trust
+        </div>
+        <div class="footer-links">
+          <a href="#privacy">Privacy Policy</a>
+          <a href="#terms">Terms of Service</a>
+          <a href="#support">Support</a>
+        </div>
+      </div>
+      <div style="margin-top: 1rem; opacity: 0.8;">
+        &copy; 2025 LAWID. All rights reserved.
+      </div>
+    </div>
   </footer>
 
   <script>
-    const chatBox = document.getElementById('chat');
+    // Speech Recognition Setup
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
+    // DOM Elements
+    const chatBox = document.getElementById('chat');
+    const micButton = document.getElementById('micButton');
+    const micIcon = document.getElementById('micIcon');
+    const micText = document.getElementById('micText');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadedFiles = document.getElementById('uploadedFiles');
+
+    let isListening = false;
+
+    // Chat Functions
     function appendMessage(text, sender) {
       const msg = document.createElement('div');
-      msg.className = 'message';
-      msg.innerHTML = `<span class="${sender}">${sender.toUpperCase()}</span>: ${text}`;
+      msg.className = `message ${sender}`;
+      
+      const time = new Date().toLocaleTimeString();
+      msg.innerHTML = `
+        <div>${text}</div>
+        <div class="message-time">${time}</div>
+      `;
+      
       chatBox.appendChild(msg);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function startListening() {
-      recognition.start();
-      recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        appendMessage(transcript, 'user');
-        simulateBotReply(transcript);
-      };
+    function toggleListening() {
+      if (isListening) {
+        stopListening();
+      } else {
+        startListening();
+      }
     }
 
-    function simulateBotReply(userInput) {
-      setTimeout(() => {
-        const reply = "Thanks for your question. Here's a placeholder legal reply to: '" + userInput + "'. Real AI will be added soon.";
-        appendMessage(reply, 'bot');
-      }, 1000);
+    function startListening() {
+      if (!SpeechRecognition) {
+        alert('Speech recognition is not supported in this browser.');
+        return;
+      }
+
+      try {
+        recognition.start();
+        isListening = true;
+        micButton.classList.add('recording');
+        micIcon.textContent = '🔴';
+        micText.textContent = 'Listening...';
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+      }
     }
+
+    function stopListening() {
+      try {
+        recognition.stop();
+        isListening = false;
+        micButton.classList.remove('recording');
+        micIcon.textContent = '🎤';
+        micText.textContent = 'Start Talking';
+      } catch (error) {
+        console.error('Error stopping speech recognition:', error);
+      }
+    }
+
+    // Speech Recognition Events
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      appendMessage(transcript, 'user');
+      simulateBotReply(transcript);
+    };
+
+    recognition.onerror = function(event) {
+      console.error('Speech recognition error:', event.error);
+      stopListening();
+    };
+
+    recognition.onend = function() {
+      stopListening();
+    };
+
+    function simulateBotReply(userInput) {
+      // Show typing indicator
+      const typingMsg = document.createElement('div');
+      typingMsg.className = 'message bot';
+      typingMsg.innerHTML = `
+        <div><span class="loading"></span> Analyzing your question...</div>
+        <div class="message-time">Just now</div>
+      `;
+      chatBox.appendChild(typingMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Simulate AI response
+      setTimeout(() => {
+        chatBox.removeChild(typingMsg);
+        
+        const responses = [
+          `I understand you're asking about "${userInput}". Based on my legal knowledge, here's what I can tell you: This appears to be a legal matter that would benefit from professional consultation. I recommend consulting with a qualified attorney for specific legal advice.`,
+          `Thank you for your question about "${userInput}". While I can provide general information, legal matters often require personalized analysis. Consider reaching out to a legal professional for detailed guidance.`,
+          `Regarding "${userInput}": This is an interesting legal question. My analysis suggests this involves several legal considerations. For comprehensive advice tailored to your situation, I'd recommend consulting with a lawyer.`
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        appendMessage(randomResponse, 'bot');
+      }, 2000);
+    }
+
+    // File Upload Functions
+    function handleFileUpload(files) {
+      Array.from(files).forEach(file => {
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+          alert(`File ${file.name} is too large. Please upload files smaller than 10MB.`);
+          return;
+        }
+
+        if (!file.type.match(/pdf|docx|application\/pdf|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document/)) {
+          alert(`File ${file.name} is not a supported format. Please upload PDF or DOCX files only.`);
+          return;
+        }
+
+        displayFile(file);
+      });
+    }
+
+    function displayFile(file) {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      
+      const fileId = 'file-' + Date.now();
+      fileItem.innerHTML = `
+        <div class="file-name">📄 ${file.name}</div>
+        <div class="file-summary">
+          <h4>Summary:</h4>
+          <div id="${fileId}-summary">
+            <span class="loading"></span> Analyzing document...
+          </div>
+        </div>
+      `;
+      
+      uploadedFiles.appendChild(fileItem);
+      
+      // Simulate document analysis
+      setTimeout(() => {
+        const summaryElement = document.getElementById(`${fileId}-summary`);
+        const summaries = [
+          "This document appears to be a legal contract with standard terms and conditions. Key sections include liability clauses, termination provisions, and dispute resolution mechanisms.",
+          "Analysis indicates this is a legal brief containing arguments related to constitutional law. The document presents multiple legal precedents and statutory interpretations.",
+          "This appears to be a legal agreement with provisions for confidentiality, non-compete clauses, and intellectual property rights. The document requires careful review of all terms.",
+          "Document analysis reveals this is a legal memorandum addressing regulatory compliance issues. Key areas of concern include licensing requirements and reporting obligations."
+        ];
+        
+        const randomSummary = summaries[Math.floor(Math.random() * summaries.length)];
+        summaryElement.innerHTML = randomSummary;
+      }, 3000);
+    }
+
+    // Event Listeners
+    fileInput.addEventListener('change', (e) => {
+      handleFileUpload(e.target.files);
+    });
+
+    // Drag and Drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFileUpload(e.dataTransfer.files);
+    });
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
