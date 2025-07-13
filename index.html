@@ -382,7 +382,7 @@
     }
 
     .mic-button {
-      background: var(--gradient-primary);
+      background: var(--gray);
       color: var(--white);
       border: none;
       padding: 1rem;
@@ -400,7 +400,16 @@
 
     .mic-button:hover {
       transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(100, 116, 139, 0.3);
+    }
+
+    .mic-button.voice-enabled {
+      background: var(--gradient-primary);
       box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .mic-button.voice-enabled:hover {
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
     }
 
     .mic-button.recording {
@@ -765,8 +774,8 @@
           <div class="chat-input">
             <div class="input-row">
               <input type="text" class="text-input" id="textInput" placeholder="Type your legal question here..." onkeypress="handleTextInput(event)">
-              <button class="mic-button" id="micButton" onclick="toggleVoice()" title="Click to speak">
-                <span id="micIcon">🎤</span>
+              <button class="mic-button" id="micButton" onclick="toggleVoice()" title="Voice mode OFF - Click to enable voice">
+                <span id="micIcon">🔇</span>
               </button>
             </div>
           </div>
@@ -814,6 +823,10 @@
   </footer>
 
   <script>
+    // API Configuration
+    const API_KEY = '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';
+    const API_URL = 'https://api.perplexity.ai/chat/completions';
+
     // Speech Recognition Setup
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
@@ -835,9 +848,40 @@
     const uploadedFiles = document.getElementById('uploadedFiles');
 
     let isListening = false;
+    let voiceEnabled = false;
+    let conversationHistory = [
+      {
+        role: "system",
+        content: "You are LAWID, a professional AI legal assistant. You provide helpful legal guidance, explain legal concepts, and assist with legal questions. Always remind users to consult with qualified attorneys for specific legal advice. Be professional, clear, and informative. Keep responses concise but comprehensive."
+      }
+    ];
 
     // Voice Functions
+    function toggleVoiceMode() {
+      voiceEnabled = !voiceEnabled;
+      
+      if (voiceEnabled) {
+        micButton.classList.add('voice-enabled');
+        micIcon.textContent = '🎤';
+        micButton.title = 'Voice mode ON - Click to speak';
+        addMessage("Voice mode activated. Click the microphone button to speak your legal questions.", 'bot');
+      } else {
+        micButton.classList.remove('voice-enabled');
+        micIcon.textContent = '🔇';
+        micButton.title = 'Voice mode OFF - Click to enable voice';
+        if (isListening) {
+          stopVoice();
+        }
+        addMessage("Voice mode deactivated. You can still type your questions.", 'bot');
+      }
+    }
+
     function toggleVoice() {
+      if (!voiceEnabled) {
+        toggleVoiceMode();
+        return;
+      }
+
       if (isListening) {
         stopVoice();
       } else {
@@ -848,6 +892,11 @@
     function startVoice() {
       if (!SpeechRecognition) {
         alert('Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.');
+        return;
+      }
+
+      if (!voiceEnabled) {
+        alert('Please enable voice mode first by clicking the microphone button.');
         return;
       }
 
@@ -983,28 +1032,71 @@
       }
     }
 
-    function simulateAIResponse(userInput) {
+    // AI API Functions
+    async function getAIResponse(userInput) {
+      try {
+        // Add user message to conversation history
+        conversationHistory.push({
+          role: "user",
+          content: userInput
+        });
+
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'llama-3.1-sonar-small-128k-online',
+            messages: conversationHistory,
+            max_tokens: 1000,
+            temperature: 0.7,
+            top_p: 0.9,
+            stream: false
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const aiResponse = data.choices[0].message.content;
+
+        // Add AI response to conversation history
+        conversationHistory.push({
+          role: "assistant",
+          content: aiResponse
+        });
+
+        return aiResponse;
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        return `I apologize, but I'm experiencing technical difficulties at the moment. Please try again in a moment, or feel free to rephrase your question. Error: ${error.message}`;
+      }
+    }
+
+    async function simulateAIResponse(userInput) {
       showTypingIndicator();
       
-      setTimeout(() => {
+      try {
+        const aiResponse = await getAIResponse(userInput);
         hideTypingIndicator();
-        
-        const responses = [
-          `I understand you're asking about "${userInput}". Based on my analysis of relevant legal frameworks and precedents, this matter involves several important legal considerations. While I can provide general guidance, I strongly recommend consulting with a qualified attorney for specific legal advice tailored to your unique situation.`,
-          
-          `Thank you for your question regarding "${userInput}". This is a complex legal matter that touches on multiple areas of law. My assessment suggests this requires careful consideration of applicable statutes, regulations, and case law. For comprehensive legal guidance, I'd recommend seeking professional counsel from a licensed attorney.`,
-          
-          `Regarding "${userInput}": This presents a sophisticated legal scenario that merits detailed analysis. Based on current legal standards, precedents, and regulatory frameworks, there are several critical factors to consider. For personalized legal advice, I encourage you to consult with a qualified attorney who can evaluate your specific circumstances and provide tailored guidance.`
-        ];
-        
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        addMessage(randomResponse, 'bot');
+        addMessage(aiResponse, 'bot');
         
         // Automatically speak the AI response
         setTimeout(() => {
-          speakMessage(randomResponse);
+          speakMessage(aiResponse);
         }, 500);
-      }, 2500);
+      } catch (error) {
+        hideTypingIndicator();
+        const errorMessage = "I apologize, but I'm experiencing technical difficulties. Please try again in a moment.";
+        addMessage(errorMessage, 'bot');
+        setTimeout(() => {
+          speakMessage(errorMessage);
+        }, 500);
+      }
     }
 
     // File Upload Functions
@@ -1111,6 +1203,12 @@
         speakMessage("You can also upload legal documents for analysis using the panel on the right. I can analyze contracts, briefs, and other legal documents to provide insights and summaries.");
       }, 500);
     }, 3000);
+
+    // Initialize the conversation with a welcome message
+    conversationHistory.push({
+      role: "assistant",
+      content: "Hello! I'm LAWID, your AI legal assistant. You can type your questions in the text box below, or click the microphone button to enable voice mode for hands-free interaction. I'll respond both in text and by speaking my answers to you."
+    });
   </script>
 </body>
 </html> 
