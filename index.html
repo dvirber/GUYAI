@@ -1,1214 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LAWID - Your Legal AI Assistant</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>בית החתולים ישראל</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --navy-dark: #0f172a;
-      --navy: #1e293b;
-      --navy-light: #334155;
-      --blue: #3b82f6;
-      --blue-light: #60a5fa;
-      --blue-dark: #2563eb;
-      --green: #10b981;
-      --green-light: #34d399;
-      --red: #ef4444;
-      --red-light: #f87171;
-      --purple: #8b5cf6;
-      --purple-light: #a78bfa;
-      --gray-dark: #475569;
-      --gray: #64748b;
-      --gray-light: #94a3b8;
-      --white: #ffffff;
-      --off-white: #f8fafc;
-      --border: #e2e8f0;
-      --shadow: rgba(0, 0, 0, 0.1);
-      --shadow-dark: rgba(0, 0, 0, 0.15);
-      --gradient-primary: linear-gradient(135deg, var(--blue), var(--purple));
-      --gradient-secondary: linear-gradient(135deg, var(--navy-dark), var(--navy));
-      --gradient-hero: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
-    }
-
     body {
-      font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      color: var(--navy);
-      background-color: var(--white);
-      overflow-x: hidden;
+      font-family: 'Assistant', sans-serif;
+      background: #fff;
+      color: #222;
+      margin: 0;
+      direction: rtl;
     }
-
-    /* Header */
-    .header {
-      background: var(--gradient-secondary);
-      color: var(--white);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px var(--shadow-dark);
+    header, nav, footer {
+      background: #fff;
+      padding: 1em 2em;
+      border-bottom: 1px solid #ddd;
     }
-
-    .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 70px;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: var(--white);
-      text-decoration: none;
-      letter-spacing: -1px;
-      transition: transform 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.05);
-    }
-
-    .logo span {
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .nav {
-      display: flex;
-      gap: 2rem;
+    nav ul {
       list-style: none;
+      display: flex;
+      justify-content: space-around;
+      padding: 0;
+      margin: 0;
     }
-
-    .nav a {
-      color: var(--gray-light);
+    nav a {
       text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      color: #333;
+      font-weight: bold;
     }
-
-    .nav a:hover {
-      color: var(--white);
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-
-    /* Hero Section */
     .hero {
-      background: var(--gradient-hero), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-      background-size: cover, 20px 20px;
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      padding-top: 70px;
-    }
-
-    .hero::before {
-      content: '⚖️';
-      position: absolute;
-      top: 15%;
-      right: 8%;
-      font-size: 10rem;
-      opacity: 0.1;
-      transform: rotate(15deg);
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .hero::after {
-      content: '📜';
-      position: absolute;
-      bottom: 20%;
-      left: 5%;
-      font-size: 6rem;
-      opacity: 0.08;
-      transform: rotate(-10deg);
-      animation: float 8s ease-in-out infinite reverse;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: rotate(15deg) translateY(0px); }
-      50% { transform: rotate(15deg) translateY(-20px); }
-    }
-
-    .hero-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
       text-align: center;
-      position: relative;
-      z-index: 2;
+      padding: 4em 2em;
+      background: #fafafa;
     }
-
     .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 1rem;
-      letter-spacing: -1px;
-      line-height: 1.1;
-      animation: fadeInUp 1s ease;
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
     }
-
-    .hero h1 .highlight {
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
     .hero p {
-      font-size: clamp(1.1rem, 2vw, 1.3rem);
-      color: var(--gray-light);
-      margin-bottom: 2rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      font-weight: 400;
-      animation: fadeInUp 1s ease 0.2s both;
+      font-size: 1.2em;
+      color: #555;
     }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Main Content */
-    .main-content {
-      padding: 4rem 0;
-      background: var(--off-white);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .content-layout {
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 3rem;
-      align-items: start;
-    }
-
-    /* Chat Interface */
-    .chat-container {
-      background: var(--white);
-      border-radius: 24px;
-      box-shadow: 0 25px 60px var(--shadow);
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .chat-header {
-      background: var(--gradient-secondary);
-      color: var(--white);
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .chat-header h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .chat-header p {
-      color: var(--gray-light);
-      font-size: 1rem;
-    }
-
-    .chat-messages {
-      height: 500px;
-      overflow-y: auto;
-      padding: 2rem;
-      background: var(--off-white);
-    }
-
-    .message {
-      margin-bottom: 1.5rem;
-      animation: fadeInUp 0.6s ease;
-    }
-
-    .message.user {
-      text-align: right;
-    }
-
-    .message-content {
+    .button {
+      margin-top: 1em;
       display: inline-block;
-      max-width: 80%;
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
-      font-size: 1rem;
-      line-height: 1.6;
-      position: relative;
-    }
-
-    .message.user .message-content {
-      background: var(--gradient-primary);
-      color: var(--white);
-      border-bottom-right-radius: 8px;
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
-    }
-
-    .message.bot .message-content {
-      background: var(--white);
-      color: var(--navy);
-      border: 1px solid var(--border);
-      border-bottom-left-radius: 8px;
-      box-shadow: 0 8px 25px var(--shadow);
-    }
-
-    .message-time {
-      font-size: 0.75rem;
-      color: var(--gray);
-      margin-top: 0.5rem;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    .message-actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      justify-content: flex-start;
-    }
-
-    .action-button {
-      background: var(--off-white);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.75rem;
-      color: var(--gray);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    .action-button:hover {
-      background: var(--blue);
-      color: var(--white);
-      border-color: var(--blue);
-    }
-
-    .typing-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 1.5rem;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      border-bottom-left-radius: 8px;
-      max-width: 80%;
-      box-shadow: 0 8px 25px var(--shadow);
-    }
-
-    .typing-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--blue);
-      border-radius: 50%;
-      animation: typing 1.4s infinite ease-in-out;
-    }
-
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-10px); }
-    }
-
-    .chat-input {
-      padding: 2rem;
-      background: var(--white);
-      border-top: 1px solid var(--border);
-    }
-
-    .input-row {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .text-input {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      border: 2px solid var(--border);
-      border-radius: 50px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      background: var(--off-white);
-    }
-
-    .text-input:focus {
-      outline: none;
-      border-color: var(--blue);
-      background: var(--white);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .mic-button {
-      background: var(--gray);
-      color: var(--white);
-      border: none;
-      padding: 1rem;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .mic-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 25px rgba(100, 116, 139, 0.3);
-    }
-
-    .mic-button.voice-enabled {
-      background: var(--gradient-primary);
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-    }
-
-    .mic-button.voice-enabled:hover {
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-    }
-
-    .mic-button.recording {
-      background: linear-gradient(135deg, var(--red), var(--red-light));
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    /* File Upload Section */
-    .upload-section {
-      background: var(--white);
-      border-radius: 24px;
-      box-shadow: 0 25px 60px var(--shadow);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      position: sticky;
-      top: 100px;
-    }
-
-    .upload-header {
-      background: var(--gradient-secondary);
-      color: var(--white);
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .upload-header h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .upload-header p {
-      color: var(--gray-light);
-      font-size: 0.9rem;
-    }
-
-    .upload-content {
-      padding: 2rem;
-    }
-
-    .upload-area {
-      border: 3px dashed var(--gray);
-      border-radius: 16px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      background: var(--off-white);
-      margin-bottom: 1.5rem;
-    }
-
-    .upload-area:hover {
-      border-color: var(--blue);
-      background: #eff6ff;
-      transform: translateY(-2px);
-    }
-
-    .upload-area.dragover {
-      border-color: var(--blue);
-      background: #dbeafe;
-      transform: scale(1.02);
-    }
-
-    .upload-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      opacity: 0.7;
-    }
-
-    .upload-text {
-      color: var(--gray);
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
-
-    .upload-text strong {
-      color: var(--navy);
-      font-weight: 600;
-    }
-
-    .file-input {
-      display: none;
-    }
-
-    .uploaded-files {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .file-card {
-      background: var(--off-white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .file-card:hover {
-      box-shadow: 0 8px 25px var(--shadow);
-      transform: translateY(-2px);
-    }
-
-    .file-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .file-icon {
-      font-size: 1.25rem;
-      color: var(--blue);
-    }
-
-    .file-name {
-      font-weight: 600;
-      color: var(--navy);
-      flex: 1;
-      font-size: 0.95rem;
-    }
-
-    .file-summary {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-    }
-
-    .file-summary h4 {
-      color: var(--blue);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .file-summary p {
-      color: var(--gray-dark);
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-
-    /* Footer */
-    .footer {
-      background: var(--gradient-secondary);
-      color: var(--white);
-      padding: 3rem 0 2rem;
-      margin-top: 4rem;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .footer-brand {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--gray-light);
+      background: #f5b041;
+      color: white;
+      padding: 0.7em 1.5em;
+      border-radius: 30px;
       text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color 0.3s ease;
+      transition: background 0.3s;
     }
-
-    .footer-links a:hover {
-      color: var(--white);
+    .button:hover {
+      background: #e67e22;
     }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 2rem;
+    section {
+      padding: 3em 2em;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .products, .gallery, .testimonials {
+      display: grid;
+      gap: 2em;
+    }
+    .products {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .products div, .testimonial {
+      border: 1px solid #eee;
+      padding: 1em;
+      border-radius: 12px;
+      background: #fdfdfd;
+    }
+    .testimonial {
+      font-style: italic;
+      background: #fcfcfc;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    form input[type="email"] {
+      padding: 0.5em;
+      width: 60%;
+      margin-left: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    form button {
+      padding: 0.5em 1em;
+      border: none;
+      background: #f5b041;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    footer {
       text-align: center;
-      color: var(--gray-light);
-      font-size: 0.9rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .content-layout {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      .upload-section {
-        position: static;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header-container {
-        padding: 0 1rem;
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .hero-container {
-        padding: 0 1rem;
-      }
-
-      .container {
-        padding: 0 1rem;
-      }
-
-      .chat-messages {
-        height: 400px;
-      }
-
-      .input-row {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .text-input {
-        width: 100%;
-      }
-
-      .mic-button {
-        width: 100%;
-        border-radius: 50px;
-      }
-
-      .footer-content {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .footer-links {
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-
-      .chat-header,
-      .upload-header {
-        padding: 1.5rem;
-      }
-
-      .chat-messages,
-      .upload-content {
-        padding: 1.5rem;
-      }
-
-      .upload-area {
-        padding: 1.5rem 1rem;
-      }
-    }
-
-    /* Loading Animation */
-    .loading {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid var(--border);
-      border-top: 2px solid var(--blue);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Scrollbar Styling */
-    .chat-messages::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .chat-messages::-webkit-scrollbar-track {
-      background: var(--off-white);
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb {
-      background: var(--gray);
-      border-radius: 4px;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb:hover {
-      background: var(--gray-dark);
+      font-size: 0.9em;
+      color: #777;
+      border-top: 1px solid #eee;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-container">
-      <a href="#" class="logo">LAW<span>ID</span></a>
-      <nav>
-        <ul class="nav">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
 
-  <!-- Hero Section -->
-  <section class="hero" id="home">
-    <div class="hero-container">
-      <h1>Talk or Type to LAWID – <span class="highlight">Your Legal AI Assistant</span></h1>
-      <p>Ask legal questions. Upload documents. Get smart answers by voice or text.</p>
-    </div>
-  </section>
+<header>
+  <nav>
+    <ul>
+      <li><a href="#home">דף הבית</a></li>
+      <li><a href="#about">עלינו</a></li>
+      <li><a href="#adoption">אימוץ חתול</a></li>
+      <li><a href="#blog">בלוג וטיפים</a></li>
+      <li><a href="#shop">חנות</a></li>
+      <li><a href="#contact">צור קשר</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="container">
-      <div class="content-layout">
-        <!-- Chat Interface -->
-        <div class="chat-container">
-          <div class="chat-header">
-            <h2>🎤💬 Legal AI Chat</h2>
-            <p>Speak or type your legal questions - I'll respond with voice and text!</p>
-          </div>
-          
-          <div class="chat-messages" id="chatMessages">
-            <div class="message bot">
-              <div class="message-content">
-                Hello! I'm LAWID, your AI legal assistant. You can speak to me using the microphone button or type your questions in the text box below. I'll respond both in text and by speaking my answers to you.
-              </div>
-              <div class="message-time">Just now</div>
-              <div class="message-actions">
-                <button class="action-button" onclick="speakMessage(this.previousElementSibling.previousElementSibling.textContent)">
-                  🔊 Speak
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div class="chat-input">
-            <div class="input-row">
-              <input type="text" class="text-input" id="textInput" placeholder="Type your legal question here..." onkeypress="handleTextInput(event)">
-              <button class="mic-button" id="micButton" onclick="toggleVoice()" title="Voice mode OFF - Click to enable voice">
-                <span id="micIcon">🔇</span>
-              </button>
-            </div>
-          </div>
-        </div>
+<section class="hero" id="home">
+  <h1>ברוכים הבאים לבית של החתולים בישראל</h1>
+  <p>אנחנו קהילה, חנות, מרכז מידע ואהבה – הכל במקום אחד. תמונות מרהיבות, סיפורים מהשטח, מוצרים מומלצים – וחתולים בכל פינה.</p>
+  <a class="button" href="#about">לגלות עוד</a>
+</section>
 
-        <!-- File Upload Section -->
-        <div class="upload-section">
-          <div class="upload-header">
-            <h3>📄 Document Analysis</h3>
-            <p>Upload legal documents for AI-powered analysis</p>
-          </div>
-          <div class="upload-content">
-            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-              <div class="upload-icon">📁</div>
-              <div class="upload-text">
-                <strong>Click to upload</strong> or drag and drop<br>
-                PDF and DOCX files (max 10MB)
-              </div>
-              <input type="file" id="fileInput" class="file-input" accept=".pdf,.docx" multiple>
-            </div>
-            
-            <div class="uploaded-files" id="uploadedFiles"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+<section id="about">
+  <h2>למה אנחנו כאן?</h2>
+  <p>כי בישראל יש עשרות אלפי חתולים, ורובם לא מקבלים את מה שמגיע להם. אנחנו כאן כדי לשנות את זה – באהבה, בחכמה, ובסטייל.</p>
+</section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">LAWID</div>
-        <div class="footer-links">
-          <a href="#privacy">Privacy Policy</a>
-          <a href="#terms">Terms of Service</a>
-          <a href="#support">Support</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 LAWID. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+<section id="shop">
+  <h2>מוצרים מומלצים</h2>
+  <div class="products">
+    <div><strong>מיטה אורתופדית לחתול</strong><br>חורף/קיץ, נוחה ובריאה</div>
+    <div><strong>צעצוע חכם</strong><br>החתול לא יעזוב אותו!</div>
+    <div><strong>ארגז חול סגור</strong><br>שקט, נקי ודיסקרטי</div>
+  </div>
+  <a class="button" href="#shop">לגלריית המוצרים המלאה</a>
+</section>
 
-  <script>
-    // API Configuration
-    const API_KEY = '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';
-    const API_URL = 'https://api.perplexity.ai/chat/completions';
+<section id="community">
+  <h2>הצטרפו לקהילה</h2>
+  <p>עדכונים, סיפורי הצלה, טיפים מהשטח, ואפילו הנחות לחנות – הירשמו וקבלו הכל באהבה, פעם בשבוע.</p>
+  <form>
+    <input type="email" placeholder="הכנס כתובת מייל">
+    <button type="submit">להצטרפות</button>
+  </form>
+</section>
 
-    // Speech Recognition Setup
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
+<section class="gallery" id="gallery">
+  <h2>תכירו את החברים שלנו</h2>
+  <div class="gallery">
+    <img src="cat1.jpg" alt="חתול 1">
+    <img src="cat2.jpg" alt="חתול 2">
+    <img src="cat3.jpg" alt="חתול 3">
+  </div>
+</section>
 
-    // Speech Synthesis Setup
-    const synth = window.speechSynthesis;
-    let currentUtterance = null;
+<section class="testimonials" id="testimonials">
+  <h2>מה אומרים עלינו?</h2>
+  <div class="testimonial">"מצאתי כאן את החתולה הכי מדהימה בעולם. תודה ענקית!" – דניאל ש.</div>
+  <div class="testimonial">"המיטה שקניתי דרך האתר – החתול שלי לא יוצא ממנה!" – עומר ל.</div>
+</section>
 
-    // DOM Elements
-    const micButton = document.getElementById('micButton');
-    const micIcon = document.getElementById('micIcon');
-    const textInput = document.getElementById('textInput');
-    const chatMessages = document.getElementById('chatMessages');
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const uploadedFiles = document.getElementById('uploadedFiles');
+<footer>
+  <p>© כל הזכויות שמורות לבית החתולים ישראל 2025</p>
+  <p>תנאי שימוש | מדיניות פרטיות | צור קשר</p>
+</footer>
 
-    let isListening = false;
-    let voiceEnabled = false;
-    let conversationHistory = [
-      {
-        role: "system",
-        content: "You are LAWID, a professional AI legal assistant. You provide helpful legal guidance, explain legal concepts, and assist with legal questions. Always remind users to consult with qualified attorneys for specific legal advice. Be professional, clear, and informative. Keep responses concise but comprehensive."
-      }
-    ];
-
-    // Voice Functions
-    function toggleVoiceMode() {
-      voiceEnabled = !voiceEnabled;
-      
-      if (voiceEnabled) {
-        micButton.classList.add('voice-enabled');
-        micIcon.textContent = '🎤';
-        micButton.title = 'Voice mode ON - Click to speak';
-        addMessage("Voice mode activated. Click the microphone button to speak your legal questions.", 'bot');
-      } else {
-        micButton.classList.remove('voice-enabled');
-        micIcon.textContent = '🔇';
-        micButton.title = 'Voice mode OFF - Click to enable voice';
-        if (isListening) {
-          stopVoice();
-        }
-        addMessage("Voice mode deactivated. You can still type your questions.", 'bot');
-      }
-    }
-
-    function toggleVoice() {
-      if (!voiceEnabled) {
-        toggleVoiceMode();
-        return;
-      }
-
-      if (isListening) {
-        stopVoice();
-      } else {
-        startVoice();
-      }
-    }
-
-    function startVoice() {
-      if (!SpeechRecognition) {
-        alert('Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.');
-        return;
-      }
-
-      if (!voiceEnabled) {
-        alert('Please enable voice mode first by clicking the microphone button.');
-        return;
-      }
-
-      try {
-        recognition.start();
-        isListening = true;
-        micButton.classList.add('recording');
-        micIcon.textContent = '🔴';
-      } catch (error) {
-        console.error('Error starting speech recognition:', error);
-      }
-    }
-
-    function stopVoice() {
-      try {
-        recognition.stop();
-        isListening = false;
-        micButton.classList.remove('recording');
-        micIcon.textContent = '🎤';
-      } catch (error) {
-        console.error('Error stopping speech recognition:', error);
-      }
-    }
-
-    // Text-to-Speech Functions
-    function speakMessage(text) {
-      // Stop any current speech
-      if (currentUtterance) {
-        synth.cancel();
-      }
-
-      currentUtterance = new SpeechSynthesisUtterance(text);
-      currentUtterance.rate = 0.9;
-      currentUtterance.pitch = 1;
-      currentUtterance.volume = 0.8;
-      
-      // Try to use a professional-sounding voice
-      const voices = synth.getVoices();
-      const preferredVoice = voices.find(voice => 
-        voice.name.includes('Google') || 
-        voice.name.includes('Microsoft') || 
-        voice.name.includes('Alex')
-      );
-      
-      if (preferredVoice) {
-        currentUtterance.voice = preferredVoice;
-      }
-
-      synth.speak(currentUtterance);
-    }
-
-    // Text Input Functions
-    function handleTextInput(event) {
-      if (event.key === 'Enter') {
-        sendTextMessage();
-      }
-    }
-
-    function sendTextMessage() {
-      const text = textInput.value.trim();
-      if (text) {
-        addMessage(text, 'user');
-        textInput.value = '';
-        simulateAIResponse(text);
-      }
-    }
-
-    // Speech Recognition Events
-    recognition.onresult = function(event) {
-      const transcript = event.results[0][0].transcript;
-      addMessage(transcript, 'user');
-      simulateAIResponse(transcript);
-    };
-
-    recognition.onerror = function(event) {
-      console.error('Speech recognition error:', event.error);
-      stopVoice();
-    };
-
-    recognition.onend = function() {
-      stopVoice();
-    };
-
-    function addMessage(text, sender) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-      
-      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
-      if (sender === 'user') {
-        messageDiv.innerHTML = `
-          <div class="message-content">${text}</div>
-          <div class="message-time">${time}</div>
-        `;
-      } else {
-        messageDiv.innerHTML = `
-          <div class="message-content">${text}</div>
-          <div class="message-time">${time}</div>
-          <div class="message-actions">
-            <button class="action-button" onclick="speakMessage('${text.replace(/'/g, "\\'")}')">
-              🔊 Speak
-            </button>
-          </div>
-        `;
-      }
-      
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'message bot';
-      typingDiv.id = 'typing-indicator';
-      
-      typingDiv.innerHTML = `
-        <div class="typing-indicator">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <span style="margin-left: 0.5rem; color: var(--gray); font-size: 0.9rem;">LAWID is thinking...</span>
-        </div>
-      `;
-      
-      chatMessages.appendChild(typingDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-      const typingIndicator = document.getElementById('typing-indicator');
-      if (typingIndicator) {
-        typingIndicator.remove();
-      }
-    }
-
-    // AI API Functions
-    async function getAIResponse(userInput) {
-      try {
-        // Add user message to conversation history
-        conversationHistory.push({
-          role: "user",
-          content: userInput
-        });
-
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'llama-3.1-sonar-small-128k-online',
-            messages: conversationHistory,
-            max_tokens: 1000,
-            temperature: 0.7,
-            top_p: 0.9,
-            stream: false
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`API request failed: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const aiResponse = data.choices[0].message.content;
-
-        // Add AI response to conversation history
-        conversationHistory.push({
-          role: "assistant",
-          content: aiResponse
-        });
-
-        return aiResponse;
-      } catch (error) {
-        console.error('Error getting AI response:', error);
-        return `I apologize, but I'm experiencing technical difficulties at the moment. Please try again in a moment, or feel free to rephrase your question. Error: ${error.message}`;
-      }
-    }
-
-    async function simulateAIResponse(userInput) {
-      showTypingIndicator();
-      
-      try {
-        const aiResponse = await getAIResponse(userInput);
-        hideTypingIndicator();
-        addMessage(aiResponse, 'bot');
-        
-        // Automatically speak the AI response
-        setTimeout(() => {
-          speakMessage(aiResponse);
-        }, 500);
-      } catch (error) {
-        hideTypingIndicator();
-        const errorMessage = "I apologize, but I'm experiencing technical difficulties. Please try again in a moment.";
-        addMessage(errorMessage, 'bot');
-        setTimeout(() => {
-          speakMessage(errorMessage);
-        }, 500);
-      }
-    }
-
-    // File Upload Functions
-    function handleFileUpload(files) {
-      Array.from(files).forEach(file => {
-        if (file.size > 10 * 1024 * 1024) {
-          alert(`File "${file.name}" is too large. Please upload files smaller than 10MB.`);
-          return;
-        }
-
-        if (!file.type.match(/pdf|docx|application\/pdf|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document/)) {
-          alert(`File "${file.name}" is not a supported format. Please upload PDF or DOCX files only.`);
-          return;
-        }
-
-        displayFile(file);
-      });
-    }
-
-    function displayFile(file) {
-      const fileCard = document.createElement('div');
-      fileCard.className = 'file-card';
-      
-      const fileId = 'file-' + Date.now();
-      fileCard.innerHTML = `
-        <div class="file-header">
-          <div class="file-icon">📄</div>
-          <div class="file-name">${file.name}</div>
-        </div>
-        <div class="file-summary">
-          <h4>AI Analysis</h4>
-          <div id="${fileId}-summary">
-            <span class="loading"></span> Analyzing document...
-          </div>
-        </div>
-      `;
-      
-      uploadedFiles.appendChild(fileCard);
-      
-      // Simulate document analysis
-      setTimeout(() => {
-        const summaryElement = document.getElementById(`${fileId}-summary`);
-        const summaries = [
-          "This document appears to be a comprehensive legal contract with standard terms and conditions. Key sections include liability clauses, termination provisions, and dispute resolution mechanisms. The contract follows established legal practices and includes appropriate safeguards for both parties.",
-          
-          "Analysis indicates this is a detailed legal brief containing sophisticated arguments related to constitutional law. The document presents multiple legal precedents and statutory interpretations. The arguments are well-structured and reference relevant case law appropriately.",
-          
-          "This appears to be a legal agreement with provisions for confidentiality, non-compete clauses, and intellectual property rights. The document requires careful review of all terms, particularly regarding scope of restrictions and duration of obligations.",
-          
-          "Document analysis reveals this is a legal memorandum addressing regulatory compliance issues. Key areas of concern include licensing requirements, reporting obligations, and potential penalties for non-compliance."
-        ];
-        
-        const randomSummary = summaries[Math.floor(Math.random() * summaries.length)];
-        summaryElement.innerHTML = `<p>${randomSummary}</p>`;
-      }, 3000);
-    }
-
-    // Event Listeners
-    fileInput.addEventListener('change', (e) => {
-      handleFileUpload(e.target.files);
-    });
-
-    // Drag and Drop
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      handleFileUpload(e.dataTransfer.files);
-    });
-
-    // Smooth scrolling for navigation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
-
-    // Initialize speech synthesis voices
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = function() {
-        // Voices are now available
-      };
-    }
-
-    // Add some initial interaction
-    setTimeout(() => {
-      addMessage("You can also upload legal documents for analysis using the panel on the right. I can analyze contracts, briefs, and other legal documents to provide insights and summaries.", 'bot');
-      setTimeout(() => {
-        speakMessage("You can also upload legal documents for analysis using the panel on the right. I can analyze contracts, briefs, and other legal documents to provide insights and summaries.");
-      }, 500);
-    }, 3000);
-
-    // Initialize the conversation with a welcome message
-    conversationHistory.push({
-      role: "assistant",
-      content: "Hello! I'm LAWID, your AI legal assistant. You can type your questions in the text box below, or click the microphone button to enable voice mode for hands-free interaction. I'll respond both in text and by speaking my answers to you."
-    });
-  </script>
 </body>
-</html> 
+</html>
