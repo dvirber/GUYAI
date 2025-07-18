@@ -3,269 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="בית חתולים - מדריך מקיף לטיפול ודאגה לחתולים בישראל">
   <title>בית חתולים - הכל לחתולים בישראל</title>
+  <meta name="description" content="בית חתולים - מדריך מקיף לטיפול ודאגה לחתולים בישראל">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Heebo', 'Noto Sans Hebrew', Arial, sans-serif;
-      background: linear-gradient(135deg, #fdf6e3 0%, #f3f4f6 100%);
-      min-height: 100vh;
-    }
+    body { font-family: 'Heebo', Arial, sans-serif; background: #fff; }
     html { scroll-behavior: smooth; }
-    .glass {
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(8px);
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
-    }
-    .button {
-      transition: all 0.3s cubic-bezier(.4,0,.2,1);
-      box-shadow: 0 2px 8px rgba(255, 140, 0, 0.08);
-    }
-    .button:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 6px 24px rgba(255, 140, 0, 0.15);
-      background: #ea580c !important;
-    }
-    .section-img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 1.25rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-      transition: transform 0.3s;
-    }
-    .section-img:hover {
-      transform: scale(1.04) rotate(-1deg);
-      box-shadow: 0 8px 32px rgba(255,140,0,0.15);
-    }
-    .floating-top {
-      position: fixed;
-      bottom: 2rem;
-      left: 2rem;
-      z-index: 100;
-      display: none;
-    }
-    .hero-bg {
-      background: linear-gradient(120deg, #f59e42cc 0%, #fbbf24cc 100%);
-    }
-    .hero-img {
-      object-fit: cover;
-      width: 100vw;
-      height: 60vh;
-      min-height: 350px;
-      max-height: 500px;
-      filter: brightness(0.85) saturate(1.1);
-    }
-    .hero-overlay {
-      position: absolute;
-      top: 0; right: 0; left: 0; bottom: 0;
-      background: linear-gradient(120deg, #f59e42cc 0%, #fbbf24cc 100%);
-      opacity: 0.5;
-      z-index: 1;
-      border-radius: 0 0 2rem 2rem;
-    }
-    .hero-content {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    }
-    @media (max-width: 768px) {
-      .hero-img { height: 40vh; min-height: 200px; }
-      .hero-content h1 { font-size: 2.2rem; }
-    }
+    .main-hero { background: linear-gradient(120deg, #f59e42 0%, #fbbf24 100%); }
+    .section-card { background: #fff; border-radius: 1.5rem; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+    .section-img { border-radius: 1.25rem; box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+    .nav-link { transition: color 0.2s; }
+    .nav-link:hover, .nav-link.active { color: #ea580c; }
   </style>
 </head>
-<body class="bg-gradient-to-br from-orange-50 to-gray-100 text-gray-900">
+<body class="text-gray-900 bg-gray-50">
 
-  <!-- Sticky Navigation Bar -->
-  <nav class="bg-white/80 backdrop-blur shadow-md sticky top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center py-3 px-4">
-      <div class="flex items-center space-x-2">
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur shadow">
+    <div class="container mx-auto flex items-center justify-between py-4 px-4">
+      <div class="flex items-center gap-2">
         <span class="text-3xl">🐾</span>
         <span class="text-2xl font-extrabold tracking-tight text-orange-500">בית חתולים</span>
       </div>
-      <ul class="flex space-x-6 text-lg font-semibold text-gray-700">
-        <li><a href="#food" class="hover:text-orange-500 transition" aria-label="אוכל מומלץ לחתולים">אוכל מומלץ</a></li>
-        <li><a href="#not-to-eat" class="hover:text-orange-500 transition" aria-label="מה אסור לתת לחתולים">מה אסור לאכול</a></li>
-        <li><a href="#health" class="hover:text-orange-500 transition" aria-label="בריאות החתול">בריאות</a></li>
-        <li><a href="#street-cats" class="hover:text-orange-500 transition" aria-label="דאגה לחתולי רחוב">חתולי רחוב</a></li>
-        <li><a href="#cat-of-the-day" class="hover:text-orange-500 transition" aria-label="חתול היום">חתול היום</a></li>
-        <li><a href="#emergency" class="hover:text-orange-500 transition" aria-label="מספרי חירום">חירום</a></li>
+      <ul class="flex gap-6 text-lg font-bold">
+        <li><a href="#food" class="nav-link">אוכל</a></li>
+        <li><a href="#health" class="nav-link">בריאות</a></li>
+        <li><a href="#behavior" class="nav-link">התנהגות</a></li>
+        <li><a href="#breeds" class="nav-link">גזעים</a></li>
+        <li><a href="#stories" class="nav-link">סיפורים</a></li>
+        <li><a href="#emergency" class="nav-link">חירום</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="relative w-full hero-bg rounded-b-3xl overflow-hidden shadow-xl mb-12">
-    <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&w=1600&q=80" alt="חתול יפהפה" class="hero-img w-full">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">ברוכים הבאים לבית החתולים</h1>
-      <p class="text-2xl md:text-3xl font-bold mb-6">הבית של כל אוהבי החתולים בישראל 🐱</p>
+  <!-- Hero -->
+  <section class="main-hero relative flex flex-col md:flex-row items-center justify-between px-4 py-16 md:py-24">
+    <div class="max-w-xl z-10">
+      <h1 class="text-5xl font-extrabold mb-4 text-white drop-shadow">ברוכים הבאים לבית החתולים</h1>
+      <p class="text-2xl font-bold mb-6 text-white drop-shadow">האתר המוביל בישראל לכל מה שקשור לחתולים 🐱</p>
       <a href="#food" class="button bg-orange-500 text-white px-8 py-3 rounded-full text-xl font-bold shadow-lg hover:bg-orange-600">התחל לגלול</a>
+    </div>
+    <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&w=900&q=80" alt="חתול יפהפה" class="w-full md:w-1/2 max-w-xl rounded-3xl shadow-xl mt-8 md:mt-0 md:ml-8 section-img">
+  </section>
+
+  <!-- Featured Guides (like cats.com homepage cards) -->
+  <section class="container mx-auto py-16 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="section-card p-6 flex flex-col items-center text-center">
+      <img src="https://images.pexels.com/photos/320014/pexels-photo-320014.jpeg?auto=compress&w=400&q=80" alt="אוכל חתולים" class="section-img w-full mb-4">
+      <h2 id="food" class="text-2xl font-bold mb-2 text-orange-500">אוכל לחתולים</h2>
+      <p class="mb-4">המלצות, השוואות, ומה אסור לתת לחתול שלך לאכול.</p>
+      <a href="#food" class="text-orange-500 font-bold hover:underline">למד עוד</a>
+    </div>
+    <div class="section-card p-6 flex flex-col items-center text-center">
+      <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&w=400&q=80" alt="בריאות חתולים" class="section-img w-full mb-4">
+      <h2 id="health" class="text-2xl font-bold mb-2 text-green-600">בריאות החתול</h2>
+      <p class="mb-4">סימני בריאות, מתי לפנות לוטרינר, וטיפים לשמירה על חתול בריא.</p>
+      <a href="#health" class="text-green-600 font-bold hover:underline">למד עוד</a>
+    </div>
+    <div class="section-card p-6 flex flex-col items-center text-center">
+      <img src="https://images.pexels.com/photos/1276553/pexels-photo-1276553.jpeg?auto=compress&w=400&q=80" alt="התנהגות חתולים" class="section-img w-full mb-4">
+      <h2 id="behavior" class="text-2xl font-bold mb-2 text-blue-600">התנהגות חתולים</h2>
+      <p class="mb-4">הבנת התנהגות החתול, פתרון בעיות, וטיפים לאילוף.</p>
+      <a href="#behavior" class="text-blue-600 font-bold hover:underline">למד עוד</a>
     </div>
   </section>
 
-  <main class="mt-8">
-    <!-- 🍽️ אוכל מומלץ לחתולים -->
-    <section id="food" class="py-16">
-      <div class="container mx-auto px-4">
-        <div class="glass p-8 md:p-12 mb-8">
-          <h2 class="text-4xl font-bold text-center mb-8 text-orange-500">אוכל מומלץ לחתולים בישראל</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <img src="https://images.pexels.com/photos/320014/pexels-photo-320014.jpeg?auto=compress&w=600&q=80" alt="חתול אוכל" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&w=600&q=80" alt="חתול ליד קערת אוכל" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/416160/pexels-photo-416160.jpeg?auto=compress&w=600&q=80" alt="קערת אוכל חתולים" class="section-img mx-auto">
-          </div>
-          <div class="max-w-4xl mx-auto text-gray-700 text-lg leading-relaxed space-y-4">
-            <p><strong>מותגים מומלצים:</strong> Royal Canin, N&D Farmina, Purina Pro Plan, Smilla, Animonda.</p>
-            <p><strong>שיקולים לבחירה:</strong> גיל החתול, מצב בריאותי, סביבה (בית/רחוב).</p>
-            <p><strong>לחתולי רחוב:</strong> עדיף אוכל יבש איכותי ועמיד. לדוגמה: Kitekat, Friskies.</p>
-          </div>
-        </div>
+  <!-- Cat Breeds Section -->
+  <section class="container mx-auto py-16 px-4" id="breeds">
+    <h2 class="text-3xl font-bold text-center mb-8 text-purple-600">גזעי חתולים פופולריים</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="section-card p-4 flex flex-col items-center">
+        <img src="https://images.pexels.com/photos/416160/pexels-photo-416160.jpeg?auto=compress&w=400&q=80" alt="חתול בריטי קצר שיער" class="section-img w-full mb-2">
+        <h3 class="font-bold text-lg mb-1">בריטי קצר שיער</h3>
+        <p class="text-gray-600 text-sm">חתול עדין, רגוע, ומתאים למשפחות.</p>
       </div>
-    </section>
-
-    <!-- ⚠️ מה אסור לתת לחתולים -->
-    <section id="not-to-eat" class="py-16 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <div class="glass p-8 md:p-12 mb-8">
-          <h2 class="text-4xl font-bold text-center mb-8 text-red-500">מה אסור לתת לחתולים לאכול</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <img src="https://images.pexels.com/photos/1276553/pexels-photo-1276553.jpeg?auto=compress&w=600&q=80" alt="חתול ליד אוכל אסור" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&w=600&q=80" alt="אוכל מסוכן לחתולים" class="section-img mx-auto">
-          </div>
-          <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed space-y-2">
-            <ul class="list-disc pr-5">
-              <li>בצל ושום – עלולים לגרום לאנמיה</li>
-              <li>שוקולד – מכיל חומרים רעילים</li>
-              <li>חלב פרה – עלול לגרום לשלשולים</li>
-              <li>עצמות עוף – סכנת חנק וקרעים פנימיים</li>
-              <li>ענבים וצימוקים – עלולים לגרום לכשל כליות</li>
-            </ul>
-          </div>
-        </div>
+      <div class="section-card p-4 flex flex-col items-center">
+        <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&w=400&q=80" alt="חתול סיאמי" class="section-img w-full mb-2">
+        <h3 class="font-bold text-lg mb-1">סיאמי</h3>
+        <p class="text-gray-600 text-sm">חכם, חברותי, ואוהב תשומת לב.</p>
       </div>
-    </section>
-
-    <!-- 🧬 בריאות חתולים -->
-    <section id="health" class="py-16">
-      <div class="container mx-auto px-4">
-        <div class="glass p-8 md:p-12 mb-8">
-          <h2 class="text-4xl font-bold text-center mb-8 text-green-600">בריאות החתול</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <img src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&w=600&q=80" alt="חתול בריא משחק" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&w=600&q=80" alt="חתול בריא" class="section-img mx-auto">
-          </div>
-          <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
-            <p>סימנים לבריאות טובה: עיניים שקופות, תיאבון, פרווה מבריקה, פעילות.</p>
-            <p>מתי לפנות לוטרינר: הקאות, שלשול מתמשך, שינוי התנהגות, חוסר תיאבון.</p>
-          </div>
-        </div>
+      <div class="section-card p-4 flex flex-col items-center">
+        <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&w=400&q=80" alt="חתול מיין קון" class="section-img w-full mb-2">
+        <h3 class="font-bold text-lg mb-1">מיין קון</h3>
+        <p class="text-gray-600 text-sm">גדול, עדין, וידידותי מאוד.</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 🐈‍⬛ דאגה לחתולי רחוב -->
-    <section id="street-cats" class="py-16 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <div class="glass p-8 md:p-12 mb-8">
-          <h2 class="text-4xl font-bold text-center mb-8 text-blue-600">איך לדאוג לחתולי רחוב</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <img src="https://images.pexels.com/photos/320014/pexels-photo-320014.jpeg?auto=compress&w=600&q=80" alt="חתול רחוב ליד קופסת קרטון" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&w=600&q=80" alt="חתול רחוב" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/1276553/pexels-photo-1276553.jpeg?auto=compress&w=600&q=80" alt="חתול ברחוב" class="section-img mx-auto">
-          </div>
-          <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed space-y-4">
-            <p>🟢 השאירו מים טריים כל יום</p>
-            <p>🍽️ האכילו באוכל יבש בלבד (עמיד)</p>
-            <p>🏠 בנו קופסת קרטון מוגנת מצינון</p>
-            <p>⚖️ עיקור/סירוס דרך עמותות מקומיות</p>
-          </div>
-        </div>
+  <!-- Cat Stories Section -->
+  <section class="container mx-auto py-16 px-4" id="stories">
+    <h2 class="text-3xl font-bold text-center mb-8 text-pink-500">סיפורי חתולים מהקהילה</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="section-card p-6">
+        <h3 class="font-bold text-lg mb-2">איך מיצי הצילה את המשפחה שלה</h3>
+        <p class="text-gray-700">מיצי, חתולה מעורבת, זיהתה דליפת גז בבית והצילה את כל המשפחה. הסיפור המלא בפנים.</p>
       </div>
-    </section>
-
-    <!-- 📸 חתול היום -->
-    <section id="cat-of-the-day" class="py-16">
-      <div class="container mx-auto px-4">
-        <div class="glass p-8 md:p-12 mb-8">
-          <h2 class="text-4xl font-bold text-center mb-8 text-pink-500">חתול היום</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <img src="https://images.pexels.com/photos/320014/pexels-photo-320014.jpeg?auto=compress&w=600&q=80" alt="חתול היום" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/1276553/pexels-photo-1276553.jpeg?auto=compress&w=600&q=80" alt="חתול חמוד" class="section-img mx-auto">
-          </div>
-          <div class="text-center max-w-2xl mx-auto mb-6 text-gray-600">
-            <p>העלו תמונה של החתול שלכם וספרו את הסיפור שלו – יופיע כאן באתר! (הפונקציונליות תתווסף בקרוב)</p>
-          </div>
-          <form class="max-w-xl mx-auto bg-gray-50 p-6 rounded-lg shadow-md space-y-4 opacity-70 pointer-events-none">
-            <input type="text" placeholder="שם החתול" class="w-full p-3 border rounded" disabled>
-            <textarea placeholder="סיפור קצר על החתול" class="w-full p-3 border rounded" rows="4" disabled></textarea>
-            <input type="file" accept="image/*" class="w-full" disabled>
-            <button type="submit" class="button bg-orange-500 text-white px-6 py-3 rounded" disabled>שלח</button>
-          </form>
-        </div>
+      <div class="section-card p-6">
+        <h3 class="font-bold text-lg mb-2">החתול שהפך לחבר הכי טוב של הכלב</h3>
+        <p class="text-gray-700">סיפור על חברות יוצאת דופן בין חתול וכלב, ואיך הם למדו לחיות יחד בהרמוניה.</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ☎️ טלפונים לחירום -->
-    <section id="emergency" class="py-16 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <div class="glass p-8 md:p-12 mb-8">
-          <h2 class="text-4xl font-bold text-center mb-8 text-purple-600">מספרי טלפון לחירום לחתולים בישראל</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <img src="https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&w=600&q=80" alt="חתול זקוק לעזרה" class="section-img mx-auto">
-            <img src="https://images.pexels.com/photos/320014/pexels-photo-320014.jpeg?auto=compress&w=600&q=80" alt="חתול במצוקה" class="section-img mx-auto">
-          </div>
-          <div class="max-w-3xl mx-auto text-gray-700 text-lg">
-            <ul class="list-disc pr-5 space-y-2">
-              <li>תנו לחיות לחיות – <a href="tel:036241776" class="text-orange-500 hover:underline">03-6241776</a></li>
-              <li>SOS חיות – <a href="tel:037441010" class="text-orange-500 hover:underline">03-7441010</a></li>
-              <li>חי כיף ראשון לציון – <a href="tel:039410000" class="text-orange-500 hover:underline">03-9410000</a></li>
-              <li>מוקד עיריית ת\"א לחתולים – <a href="tel:106" class="text-orange-500 hover:underline">106</a></li>
-              <li>וטרינר חירום אונליין – <a href="https://vet-on-call.co.il" class="text-orange-500 hover:underline">vet-on-call.co.il</a></li>
-            </ul>
-          </div>
-          <div class="mt-8 text-center">
-            <p class="text-gray-600 mb-2">רוצה להוסיף מספר מתנדב?</p>
-            <button disabled class="button bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded">הוספת מספר (בקרוב)</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Floating Back to Top Button -->
-  <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
-    class="floating-top button bg-orange-500 text-white px-4 py-2 rounded-full shadow-lg text-xl"
-    id="backToTop" aria-label="חזור למעלה">
-    ↑
-  </button>
+  <!-- Emergency Section -->
+  <section class="container mx-auto py-16 px-4" id="emergency">
+    <h2 class="text-3xl font-bold text-center mb-8 text-red-600">מספרי חירום לחתולים בישראל</h2>
+    <div class="section-card p-6 max-w-2xl mx-auto">
+      <ul class="list-disc pr-5 space-y-2 text-lg">
+        <li>תנו לחיות לחיות – <a href="tel:036241776" class="text-orange-500 hover:underline">03-6241776</a></li>
+        <li>SOS חיות – <a href="tel:037441010" class="text-orange-500 hover:underline">03-7441010</a></li>
+        <li>חי כיף ראשון לציון – <a href="tel:039410000" class="text-orange-500 hover:underline">03-9410000</a></li>
+        <li>מוקד עיריית ת\"א לחתולים – <a href="tel:106" class="text-orange-500 hover:underline">106</a></li>
+        <li>וטרינר חירום אונליין – <a href="https://vet-on-call.co.il" class="text-orange-500 hover:underline">vet-on-call.co.il</a></li>
+      </ul>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer class="bg-orange-500 text-white py-6 mt-12">
+  <footer class="bg-gray-900 text-gray-200 py-8 mt-16">
     <div class="container mx-auto px-4 text-center">
-      <p>© 2025 בית חתולים. כל הזכויות שמורות.</p>
+      <p>נבנה באהבה לחתולים בישראל 🐾 | © 2025</p>
     </div>
   </footer>
-
-  <script>
-    // Show floating back-to-top button on scroll
-    window.addEventListener('scroll', function() {
-      const btn = document.getElementById('backToTop');
-      if (window.scrollY > 400) {
-        btn.style.display = 'block';
-      } else {
-        btn.style.display = 'none';
-      }
-    });
-  </script>
 </body>
 </html>
