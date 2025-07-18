@@ -1,104 +1,139 @@
-# Load the user's existing HTML and append the full site sections with content
-from pathlib import Path
-
-base_html = Path("/mnt/data/beit-hatulim-site.html").read_text(encoding="utf-8")
-
-# Define the new sections to be added
-new_sections = """
-<!-- 🍽️ אוכל מומלץ לחתולים -->
-<section id="food" class="py-16 bg-white">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-8">אוכל מומלץ לחתולים בישראל</h2>
-    <div class="max-w-4xl mx-auto text-gray-700 text-lg leading-relaxed space-y-4">
-      <p><strong>מותגים מומלצים:</strong> Royal Canin, N&D Farmina, Purina Pro Plan, Smilla, Animonda.</p>
-      <p><strong>שיקולים לבחירה:</strong> גיל החתול, מצב בריאותי, סביבה (בית/רחוב).</p>
-      <p><strong>לחתולי רחוב:</strong> עדיף אוכל יבש איכותי ועמיד. לדוגמה: Kitekat, Friskies.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ⚠️ מה אסור לתת לחתולים -->
-<section id="not-to-eat" class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-8">מה אסור לתת לחתולים לאכול</h2>
-    <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed space-y-2">
-      <ul class="list-disc pr-5">
-        <li>בצל ושום – עלולים לגרום לאנמיה</li>
-        <li>שוקולד – מכיל חומרים רעילים</li>
-        <li>חלב פרה – עלול לגרום לשלשולים</li>
-        <li>עצמות עוף – סכנת חנק וקרעים פנימיים</li>
-        <li>ענבים וצימוקים – עלולים לגרום לכשל כליות</li>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="בית חתולים - מדריך מקיף לטיפול ודאגה לחתולים בישראל">
+  <title>בית חתולים - הכל לחתולים בישראל</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Noto Sans Hebrew', sans-serif;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+    .section-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <!-- Sticky Navigation Bar -->
+  <nav class="bg-orange-500 text-white p-4 sticky top-0 z-50 shadow-md">
+    <div class="container mx-auto flex justify-center">
+      <ul class="flex space-x-6 text-lg font-semibold">
+        <li><a href="#food" class="hover:underline" aria-label="אוכל מומלץ לחתולים">אוכל מומלץ</a></li>
+        <li><a href="#not-to-eat" class="hover:underline" aria-label="מה אסור לתת לחתולים">מה אסור לאכול</a></li>
+        <li><a href="#health" class="hover:underline" aria-label="בריאות החתול">בריאות</a></li>
+        <li><a href="#street-cats" class="hover:underline" aria-label="דאגה לחתולי רחוב">חתולי רחוב</a></li>
+        <li><a href="#cat-of-the-day" class="hover:underline" aria-label="חתול היום">חתול היום</a></li>
+        <li><a href="#emergency" class="hover:underline" aria-label="מספרי חירום">חירום</a></li>
       </ul>
     </div>
-  </div>
-</section>
+  </nav>
 
-<!-- 🧬 בריאות חתולים -->
-<section id="health" class="py-16 bg-white">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-8">בריאות החתול</h2>
-    <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
-      <p>סימנים לבריאות טובה: עיניים שקופות, תיאבון, פרווה מבריקה, פעילות.</p>
-      <p>מתי לפנות לוטרינר: הקאות, שלשול מתמשך, שינוי התנהגות, חוסר תיאבון.</p>
+  <!-- 🍽️ אוכל מומלץ לחתולים -->
+  <section id="food" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-8">אוכל מומלץ לחתולים בישראל</h2>
+      <img src="https://placekitten.com/800/400" alt="חתול אוכל אוכל יבש" class="section-img mx-auto mb-6">
+      <div class="max-w-4xl mx-auto text-gray-700 text-lg leading-relaxed space-y-4">
+        <p><strong>מותגים מומלצים:</strong> Royal Canin, N&D Farmina, Purina Pro Plan, Smilla, Animonda.</p>
+        <p><strong>שיקולים לבחירה:</strong> גיל החתול, מצב בריאותי, סביבה (בית/רחוב).</p>
+        <p><strong>לחתולי רחוב:</strong> עדיף אוכל יבש איכותי ועמיד. לדוגמה: Kitekat, Friskies.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- 🐈‍⬛ דאגה לחתולי רחוב -->
-<section id="street-cats" class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-8">איך לדאוג לחתולי רחוב</h2>
-    <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed space-y-4">
-      <p>🟢 השאירו מים טריים כל יום</p>
-      <p>🍽️ האכילו באוכל יבש בלבד (עמיד)</p>
-      <p>🏠 בנו קופסת קרטון מוגנת מצינון</p>
-      <p>⚖️ עיקור/סירוס דרך עמותות מקומיות</p>
+  <!-- ⚠️ מה אסור לתת לחתולים -->
+  <section id="not-to-eat" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-8">מה אסור לתת לחתולים לאכול</h2>
+      <img src="https://placekitten.com/800/401" alt="חתול ליד אוכל אסור" class="section-img mx-auto mb-6">
+      <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed space-y-2">
+        <ul class="list-disc pr-5">
+          <li>בצל ושום – עלולים לגרום לאנמיה</li>
+          <li>שוקולד – מכיל חומרים רעילים</li>
+          <li>חלב פרה – עלול לגרום לשלשולים</li>
+          <li>עצמות עוף – סכנת חנק וקרעים פנימיים</li>
+          <li>ענבים וצימוקים – עלולים לגרום לכשל כליות</li>
+        </ul>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- 📸 חתול היום -->
-<section id="cat-of-the-day" class="py-16 bg-white">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-8">חתול היום</h2>
-    <div class="text-center max-w-2xl mx-auto mb-6 text-gray-600">
-      <p>העלו תמונה של החתול שלכם וספרו את הסיפור שלו – יופיע כאן באתר!</p>
+  <!-- 🧬 בריאות חתולים -->
+  <section id="health" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-8">בריאות החתול</h2>
+      <img src="https://placekitten.com/800/402" alt="חתול בריא משחק" class="section-img mx-auto mb-6">
+      <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
+        <p>סימנים לבריאות טובה: עיניים שקופות, תיאבון, פרווה מבריקה, פעילות.</p>
+        <p>מתי לפנות לוטרינר: הקאות, שלשול מתמשך, שינוי התנהגות, חוסר תיאבון.</p>
+      </div>
     </div>
-    <form class="max-w-xl mx-auto bg-gray-50 p-6 rounded-lg shadow-md space-y-4">
-      <input type="text" placeholder="שם החתול" class="w-full p-3 border rounded">
-      <textarea placeholder="סיפור קצר על החתול" class="w-full p-3 border rounded" rows="4"></textarea>
-      <input type="file" accept="image/*" class="w-full">
-      <button type="submit" class="button bg-orange-500 text-white px-6 py-3 rounded hover:bg-orange-600">שלח</button>
-    </form>
-  </div>
-</section>
+  </section>
 
-<!-- ☎️ טלפונים לחירום -->
-<section id="emergency" class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-8">מספרי טלפון לחירום לחתולים בישראל</h2>
-    <div class="max-w-3xl mx-auto text-gray-700 text-lg">
-      <ul class="list-disc pr-5 space-y-2">
-        <li>תנו לחיות לחיות – 03-6241776</li>
-        <li>SOS חיות – 03-7441010</li>
-        <li>חי כיף ראשון לציון – 03-9410000</li>
-        <li>מוקד עיריית ת"א לחתולים – 106</li>
-        <li>וטרינר חירום אונליין – vet-on-call.co.il</li>
-      </ul>
+  <!-- 🐈‍⬛ דאגה לחתולי רחוב -->
+  <section id="street-cats" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-8">איך לדאוג לחתולי רחוב</h2>
+      <img src="https://placekitten.com/800/403" alt="חתול רחוב ליד קופסת קרטון" class="section-img mx-auto mb-6">
+      <div class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed space-y-4">
+        <p>🟢 השאירו מים טריים כל יום</p>
+        <p>🍽️ האכילו באוכל יבש בלבד (עמיד)</p>
+        <p>🏠 בנו קופסת קרטון מוגנת מצינון</p>
+        <p>⚖️ עיקור/סירוס דרך עמותות מקומיות</p>
+      </div>
     </div>
-    <div class="mt-8 text-center">
-      <p class="text-gray-600 mb-2">רוצה להוסיף מספר מתנדב?</p>
-      <button disabled class="button bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded">הוספת מספר (בקרוב)</button>
+  </section>
+
+  <!-- 📸 חתול היום -->
+  <section id="cat-of-the-day" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-8">חתול היום</h2>
+      <img src="https://placekitten.com/800/404" alt="חתול היום" class="section-img mx-auto mb-6">
+      <div class="text-center max-w-2xl mx-auto mb-6 text-gray-600">
+        <p>העלו תמונה של החתול שלכם וספרו את הסיפור שלו – יופיע כאן באתר! (הפונקציונליות תתווסף בקרוב)</p>
+      </div>
     </div>
-  </div>
-</section>
-"""
+  </section>
 
-# Inject new sections before </body>
-updated_html = base_html.replace("</body>", f"{new_sections}\n</body>")
+  <!-- ☎️ טלפונים לחירום -->
+  <section id="emergency" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-8">מספרי טלפון לחירום לחתולים בישראל</h2>
+      <img src="https://placekitten.com/800/405" alt="חתול זקוק לעזרה" class="section-img mx-auto mb-6">
+      <div class="max-w-3xl mx-auto text-gray-700 text-lg">
+        <ul class="list-disc pr-5 space-y-2">
+          <li>תנו לחיות לחיות – <a href="tel:036241776" class="text-orange-500 hover:underline">03-6241776</a></li>
+          <li>SOS חיות – <a href="tel:037441010" class="text-orange-500 hover:underline">03-7441010</a></li>
+          <li>חי כיף ראשון לציון – <a href="tel:039410000" class="text-orange-500 hover:underline">03-9410000</a></li>
+          <li>מוקד עיריית ת"א לחתולים – <a href="tel:106" class="text-orange-500 hover:underline">106</a></li>
+          <li>וטרינר חירום אונליין – <a href="https://vet-on-call.co.il" class="text-orange-500 hover:underline">vet-on-call.co.il</a></li>
+        </ul>
+      </div>
+      <div class="mt-8 text-center">
+        <p class="text-gray-600 mb-2">רוצה להוסיף מספר מתנדב?</p>
+        <button disabled class="button bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded">הוספת מספר (בקרוב)</button>
+      </div>
+    </div>
+  </section>
 
-# Save the updated HTML
-updated_path = "/mnt/data/beit-hatulim-full-site.html"
-Path(updated_path).write_text(updated_html, encoding="utf-8")
-
-updated_path
+  <!-- Footer -->
+  <footer class="bg-orange-500 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2025 בית חתולים. כל הזכויות שמורות.</p>
+    </div>
+  </footer>
+</body>
+</html>
